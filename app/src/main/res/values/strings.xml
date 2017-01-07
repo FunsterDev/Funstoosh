@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Funstoosh</string>
+    <string name="title_activity_count_down_view">CountDownView</string>
+    <string name="title_activity_players_view">PlayersView</string>
+</resources>
