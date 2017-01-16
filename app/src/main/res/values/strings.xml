@@ -2,4 +2,6 @@
     <string name="app_name">Funstoosh</string>
     <string name="title_activity_count_down_view">CountDownView</string>
     <string name="title_activity_players_view">PlayersView</string>
+    <string name="title_activity_seeker_view">SeekerView</string>
+    <string name="title_activity_hint_picture_gallery">HintPictureGallery</string>
 </resources>

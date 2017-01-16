@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.funstergames.funstoosh">
-    <uses-feature android:name="android.hardware.camera"
+
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
+
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,6 +28,15 @@
         <activity
             android:name=".PlayersView"
             android:label="@string/title_activity_players_view"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".CreateGroup" />
+        <activity
+            android:name=".SeekerView"
+            android:label="@string/title_activity_seeker_view"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".HintPictureGallery"
+            android:label="@string/title_activity_hint_picture_gallery"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
