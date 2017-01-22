@@ -9,4 +9,5 @@
 
     <color name="colorForeground">#000100</color>
     <color name="timer_circle">#2ebfca</color>
+    <color name="colorinputBG">#000100</color>
 </resources>
