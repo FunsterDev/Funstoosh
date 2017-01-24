@@ -3,7 +3,7 @@ class UsersController < ApplicationController
 
   def create
     self.current_user = User.create!(user_params)
-    head :created
+    render json: { phone_number: current_user.phone_number }, status: :created
   end
 
   def index

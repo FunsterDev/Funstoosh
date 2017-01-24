@@ -23,7 +23,7 @@ public class MenuActivity extends AppCompatActivity {
     public void login(View view) {
         PreferenceManager.getDefaultSharedPreferences(this)
                 .edit()
-                .remove(LoginActivity.PREFERENCE_LOGGED_IN)
+                .remove(LoginActivity.PREFERENCE_LOGGED_IN_PHONE_NUMBER)
                 .apply();
         startActivity(
                 new Intent(this, LoginActivity.class)

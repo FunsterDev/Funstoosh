@@ -41,15 +41,21 @@ class GameChannel < ApplicationCable::Channel
       type: 'start'
   end
 
-  def magic_wand
+  def added_picture
     broadcast_to "game_#{@game.id}",
-      type: 'magic_wand',
+      type: 'added_picture',
       who: current_user.phone_number
   end
 
-  def picture
+  def used_picture
     broadcast_to "game_#{@game.id}",
-      type: 'picture',
+      type: 'used_picture',
+      who: current_user.phone_number
+  end
+
+  def used_magic_wand
+    broadcast_to "game_#{@game.id}",
+      type: 'used_magic_wand',
       who: current_user.phone_number
   end
 

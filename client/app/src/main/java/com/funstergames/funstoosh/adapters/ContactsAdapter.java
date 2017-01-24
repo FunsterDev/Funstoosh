@@ -76,7 +76,7 @@ public class ContactsAdapter extends BaseAdapter {
                     if (isChecked) {
                         _selected.add((String)checkbox.getTag());
                     } else {
-                        _selected.remove((String)checkbox.getTag());
+                        _selected.remove(checkbox.getTag());
                     }
                 }
             });

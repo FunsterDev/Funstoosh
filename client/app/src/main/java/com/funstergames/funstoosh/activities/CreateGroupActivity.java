@@ -1,32 +1,25 @@
 package com.funstergames.funstoosh.activities;
 
-import android.*;
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.provider.ContactsContract;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
 import com.funstergames.funstoosh.Constants;
+import com.funstergames.funstoosh.R;
 import com.funstergames.funstoosh.adapters.ContactsAdapter;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.Response;
 
 import org.apache.commons.lang3.StringUtils;
-import com.funstergames.funstoosh.R;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class CreateGroupActivity extends AppCompatActivity {
@@ -71,6 +64,20 @@ public class CreateGroupActivity extends AppCompatActivity {
     }
 
     public void createGroup(View view) {
-        
+        if (_contactsAdapter == null || _contactsAdapter.getSelected().isEmpty()) return;
+
+        Ion.with(this)
+                .load("POST", Constants.ROOT_URL + "/games")
+                .addQuery("phone_numbers", StringUtils.join(_contactsAdapter.getSelected(), ','))
+                .asJsonObject()
+                .withResponse()
+                .setCallback(new FutureCallback<Response<JsonObject>>() {
+                    @Override
+                    public void onCompleted(Exception e, Response<JsonObject> result) {
+                        if (e != null || result.getHeaders().code() != 201) return;
+
+                        int id = result.getResult().get("id").getAsInt();
+                    }
+                });
     }
 }

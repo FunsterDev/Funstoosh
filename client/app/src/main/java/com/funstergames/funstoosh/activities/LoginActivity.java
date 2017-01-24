@@ -18,15 +18,19 @@ import android.widget.EditText;
 import com.funstergames.funstoosh.R;
 import com.funstergames.funstoosh.Constants;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.async.http.body.JSONObjectBody;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.Response;
+
+import org.json.JSONObject;
 
 /**
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity {
-    public static final String PREFERENCE_LOGGED_IN = "logged_in";
+    public static final String PREFERENCE_LOGGED_IN_PHONE_NUMBER = "logged_in_phone_number";
 
     private static final int PERMISSIONS_REQUEST_READ_PHONE_STATE = 0;
 
@@ -37,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (PreferenceManager.getDefaultSharedPreferences(this).contains(PREFERENCE_LOGGED_IN)) {
+        if (PreferenceManager.getDefaultSharedPreferences(this).contains(PREFERENCE_LOGGED_IN_PHONE_NUMBER)) {
             startActivity(
                     new Intent(this, MenuActivity.class)
                             .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -107,15 +111,15 @@ public class LoginActivity extends AppCompatActivity {
                 .setBodyParameter("country_code", _countryCodeEdit.getText().toString())
                 .setBodyParameter("phone_number", _phoneNumberEdit.getText().toString())
                 .setBodyParameter("fcm_registration_id", FirebaseInstanceId.getInstance().getToken())
-                .asString()
+                .asJsonObject()
                 .withResponse()
-                .setCallback(new FutureCallback<Response<String>>() {
+                .setCallback(new FutureCallback<Response<JsonObject>>() {
                     @Override
-                    public void onCompleted(Exception e, Response<String> response) {
+                    public void onCompleted(Exception e, Response<JsonObject> response) {
                         if (e != null || response.getHeaders().code() != 201) return;
                         PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
                                 .edit()
-                                .putBoolean(PREFERENCE_LOGGED_IN, true)
+                                .putString(PREFERENCE_LOGGED_IN_PHONE_NUMBER, response.getResult().get("id").getAsString())
                                 .apply();
                         startActivity(
                                 new Intent(LoginActivity.this, MenuActivity.class)
