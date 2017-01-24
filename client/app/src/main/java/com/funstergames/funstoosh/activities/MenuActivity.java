@@ -25,9 +25,7 @@ public class MenuActivity extends AppCompatActivity {
                 .edit()
                 .remove(LoginActivity.PREFERENCE_LOGGED_IN_PHONE_NUMBER)
                 .apply();
-        startActivity(
-                new Intent(this, LoginActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        );
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 }

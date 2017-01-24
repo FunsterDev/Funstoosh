@@ -40,7 +40,7 @@
                 android:maxLines="1" />
 
             <Button
-                android:id="@+id/phone_sign_in_button"
+                android:id="@+id/login"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

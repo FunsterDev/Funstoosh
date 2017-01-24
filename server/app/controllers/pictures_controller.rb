@@ -9,7 +9,7 @@ class PicturesController < ApplicationController
 
     File.open(fullpath, filename), 'wb') { |f| f.write(params[:file]) }
 
-    GameChannel.broadcast_to "game_#{current_user.game_id}",
+    GameChannel.broadcast_to current_user.game,
       type: 'picture',
       who: current_user.phone_number,
       path: filename

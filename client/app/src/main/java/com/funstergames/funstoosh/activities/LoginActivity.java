@@ -42,10 +42,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (PreferenceManager.getDefaultSharedPreferences(this).contains(PREFERENCE_LOGGED_IN_PHONE_NUMBER)) {
-            startActivity(
-                    new Intent(this, MenuActivity.class)
-                            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            );
+            startActivity(new Intent(this, MenuActivity.class));
+            finish();
             return;
         }
 
@@ -119,12 +117,10 @@ public class LoginActivity extends AppCompatActivity {
                         if (e != null || response.getHeaders().code() != 201) return;
                         PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
                                 .edit()
-                                .putString(PREFERENCE_LOGGED_IN_PHONE_NUMBER, response.getResult().get("id").getAsString())
+                                .putString(PREFERENCE_LOGGED_IN_PHONE_NUMBER, response.getResult().get("phone_number").getAsString())
                                 .apply();
-                        startActivity(
-                                new Intent(LoginActivity.this, MenuActivity.class)
-                                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        );
+                        startActivity(new Intent(LoginActivity.this, MenuActivity.class));
+                        finish();
                     }
                 });
     }

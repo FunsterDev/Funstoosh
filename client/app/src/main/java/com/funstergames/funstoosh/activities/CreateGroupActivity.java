@@ -1,6 +1,7 @@
 package com.funstergames.funstoosh.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -10,8 +11,9 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.funstergames.funstoosh.Constants;
+import com.funstergames.funstoosh.Contact;
 import com.funstergames.funstoosh.R;
-import com.funstergames.funstoosh.adapters.ContactsAdapter;
+import com.funstergames.funstoosh.adapters.InviteContactsAdapter;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -26,7 +28,7 @@ public class CreateGroupActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 0;
 
     private ListView _contactsList;
-    private ContactsAdapter _contactsAdapter;
+    private InviteContactsAdapter _inviteContactsAdapter;
 
     // Name, Phone number
     private ArrayList<Map.Entry<String, String>> availableContacts = new ArrayList<>();
@@ -59,16 +61,16 @@ public class CreateGroupActivity extends AppCompatActivity {
     }
 
     private void initializeContacts() {
-        _contactsAdapter = new ContactsAdapter(this);
-        _contactsList.setAdapter(_contactsAdapter);
+        _inviteContactsAdapter = new InviteContactsAdapter(this);
+        _contactsList.setAdapter(_inviteContactsAdapter);
     }
 
     public void createGroup(View view) {
-        if (_contactsAdapter == null || _contactsAdapter.getSelected().isEmpty()) return;
+        if (_inviteContactsAdapter == null || _inviteContactsAdapter.getSelected().isEmpty()) return;
 
         Ion.with(this)
                 .load("POST", Constants.ROOT_URL + "/games")
-                .addQuery("phone_numbers", StringUtils.join(_contactsAdapter.getSelected(), ','))
+                .addQuery("phone_numbers", StringUtils.join(_inviteContactsAdapter.getSelected().keySet(), ','))
                 .asJsonObject()
                 .withResponse()
                 .setCallback(new FutureCallback<Response<JsonObject>>() {
@@ -76,7 +78,15 @@ public class CreateGroupActivity extends AppCompatActivity {
                     public void onCompleted(Exception e, Response<JsonObject> result) {
                         if (e != null || result.getHeaders().code() != 201) return;
 
-                        int id = result.getResult().get("id").getAsInt();
+                        int gameId = result.getResult().get("id").getAsInt();
+                        startActivity(
+                                new Intent(CreateGroupActivity.this, WaitForPlayersActivity.class)
+                                        .putExtra(WaitForPlayersActivity.EXTRA_GAME_ID, gameId)
+                                        .putExtra(
+                                                WaitForPlayersActivity.EXTRA_INVITED_PLAYERS,
+                                                _inviteContactsAdapter.getSelected().values().toArray(new Contact[_inviteContactsAdapter.getSelected().size()])
+                                        )
+                        );
                     }
                 });
     }

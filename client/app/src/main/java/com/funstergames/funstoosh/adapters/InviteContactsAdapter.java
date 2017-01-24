@@ -8,88 +8,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
-import android.widget.TextView;
 
 import com.funstergames.funstoosh.Constants;
+import com.funstergames.funstoosh.Contact;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.Response;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 
-/**
- * Created by oded on 1/24/17.
- */
-
-public class ContactsAdapter extends BaseAdapter {
+public class InviteContactsAdapter extends BaseAdapter {
     private Context _context;
-    // Name, Phone Number
-    private ArrayList<Map.Entry<String, String>> _available = new ArrayList<>();
-    private HashSet<String> _selected = new HashSet<>();
+    private ArrayList<Contact> _available = new ArrayList<>();
+    // Phone Number -> Contact
+    private HashMap<String, Contact> _selected = new HashMap<>();
 
-    public ContactsAdapter(Context context) {
+    public InviteContactsAdapter(Context context) {
         _context = context;
         ContentResolver contentResolver = _context.getContentResolver();
         checkNextBatch(contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null));
-    }
-
-    public HashSet<String> getSelected() {
-        return _selected;
-    }
-
-    @Override
-    public int getCount() {
-        return _available.size();
-    }
-
-    @Override
-    public Map.Entry<String, String> getItem(int position) {
-        return _available.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final CheckBox checkbox;
-        if (convertView == null) {
-            checkbox = new CheckBox(parent.getContext());
-
-            checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        _selected.add((String)checkbox.getTag());
-                    } else {
-                        _selected.remove(checkbox.getTag());
-                    }
-                }
-            });
-        } else {
-            checkbox = (CheckBox)convertView;
-        }
-
-        Map.Entry<String, String> item = getItem(position);
-        checkbox.setText(item.getKey());
-        checkbox.setTag(item.getValue());
-        checkbox.setChecked(_selected.contains(item.getValue()));
-
-        return checkbox;
     }
 
     private void checkNextBatch(final Cursor cursor) {
@@ -129,9 +72,9 @@ public class ContactsAdapter extends BaseAdapter {
                         if (e != null || result.getHeaders().code() != 200) return;
 
                         for (JsonElement phoneNumber : result.getResult()) {
-                            _available.add(new AbstractMap.SimpleEntry<>(
-                                    numberToName.get(phoneNumber.getAsString()),
-                                    phoneNumber.getAsString()
+                            _available.add(new Contact(
+                                    phoneNumber.getAsString(),
+                                    numberToName.get(phoneNumber.getAsString())
                             ));
                         }
                         notifyDataSetChanged();
@@ -139,5 +82,53 @@ public class ContactsAdapter extends BaseAdapter {
                         if (!cursor.isClosed()) checkNextBatch(cursor);
                     }
                 });
+    }
+
+    public HashMap<String, Contact> getSelected() {
+        return _selected;
+    }
+
+    @Override
+    public int getCount() {
+        return _available.size();
+    }
+
+    @Override
+    public Contact getItem(int position) {
+        return _available.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        final CheckBox checkbox;
+        if (convertView == null) {
+            checkbox = new CheckBox(parent.getContext());
+
+            checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        _selected.put((String)checkbox.getTag(),
+                                new Contact((String)checkbox.getTag(), checkbox.getText().toString()));
+                    } else {
+                        _selected.remove((String)checkbox.getTag());
+                    }
+                }
+            });
+        } else {
+            checkbox = (CheckBox)convertView;
+        }
+
+        Contact contact = getItem(position);
+        checkbox.setText(contact.name);
+        checkbox.setTag(contact.phoneNumber);
+        checkbox.setChecked(_selected.containsKey(contact.phoneNumber));
+
+        return checkbox;
     }
 }

@@ -17,6 +17,8 @@
 #
 
 class User < ApplicationRecord
+  belongs_to :game
+
   validates_presence_of :country_code, :phone_number
   validates_presence_of :fcm_registration_id
 
@@ -43,7 +45,7 @@ class User < ApplicationRecord
 
       normalized
     end
-    User.where(phone_numbers: phone_numbers)
+    User.where(phone_number: phone_numbers)
   end
 
   def installed_phone_numbers(phone_numbers)
