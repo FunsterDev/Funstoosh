@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "962715691570",
+    "firebase_url": "https://funstoosh-a0d36.firebaseio.com",
+    "project_id": "funstoosh-a0d36",
+    "storage_bucket": "funstoosh-a0d36.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:962715691570:android:7980603c8f65c4f9",
+        "android_client_info": {
+          "package_name": "com.funstergames.funstoosh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "962715691570-8nk874oog8d2m0jk9krqt89646hfq038.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.funstergames.funstoosh",
+            "certificate_hash": "B8950B370F1360332F02CA6B5056E9EA504116A9"
+          }
+        },
+        {
+          "client_id": "962715691570-45j7r2ahhsg3pcvu09fu8ti76guu427t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3sF8obN1_pi2BrCBLkgGUN5e1dRJfWPE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "962715691570-45j7r2ahhsg3pcvu09fu8ti76guu427t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

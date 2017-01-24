@@ -5,34 +5,33 @@
 #  id                  :integer          not null, primary key
 #  country_code        :string(255)      not null
 #  phone_number        :string(255)      not null
-#  gcm_registration_id :string(255)      not null
+#  fcm_registration_id :string(255)      not null
 #  game_id             :integer
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #
 # Indexes
 #
-#  index_users_on_country_code_and_phone_number  (country_code,phone_number) UNIQUE
-#  index_users_on_game_id                        (game_id)
+#  index_users_on_game_id       (game_id)
+#  index_users_on_phone_number  (phone_number) UNIQUE
 #
 
 class User < ApplicationRecord
   validates_presence_of :country_code, :phone_number
-  validates_presence_of :gcm_registration_id
+  validates_presence_of :fcm_registration_id
 
-  before_validation :normalize!
+  before_validation :normalize!, on: :create
   around_create :override_existing
 
   def self.normalize_phone(country_code, phone_number)
-    if country_code
-      country_code = country_code.gsub(/[^\D]/, '')
+    if country_code.present?
+      country_code = country_code.gsub(/\D/, '')
     end
-    if phone_number
+    if phone_number.present?
       phone_number = phone_number[1..-1] if phone_number.starts_with?('0')
-      phone_number = phone_number.gsub(/[^\D]/, '')
+      phone_number = phone_number.gsub(/\D/, '')
+      phone_number = "#{country_code}#{phone_number}" if country_code
     end
-
-    phone_number = "#{country_code}#{phone_number}" if country_code
 
     [country_code, phone_number]
   end
@@ -68,7 +67,7 @@ class User < ApplicationRecord
   end
 
   def override_existing
-    gcm_registration_id = self.gcm_registration_id
+    fcm_registration_id = self.fcm_registration_id
     begin
       yield
     rescue ActiveRecord::RecordNotUnique
@@ -79,9 +78,9 @@ class User < ApplicationRecord
       other.encode_with(coder)
       init_with(coder)
 
-      if gcm_registration_id != self.gcm_registration_id
+      if fcm_registration_id != self.fcm_registration_id
         # updated
-        self.gcm_registration_id = gcm_registration_id
+        self.fcm_registration_id = fcm_registration_id
         save!
       end
     end

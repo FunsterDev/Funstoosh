@@ -1,4 +1,4 @@
-package com.funstergames.funstoosh;
+package com.funstergames.funstoosh.adapters;
 
 import android.content.Context;
 import android.view.View;
@@ -7,9 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-/**
- * Created by Hila on 15/01/2017.
- */
+import com.funstergames.funstoosh.R;
 
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;

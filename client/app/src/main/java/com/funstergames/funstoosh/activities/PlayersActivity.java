@@ -1,4 +1,4 @@
-package com.funstergames.funstoosh;
+package com.funstergames.funstoosh.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,7 +9,9 @@ import android.view.View;
 import android.content.Intent;
 import android.provider.MediaStore;
 
-public class PlayersView extends AppCompatActivity {
+import com.funstergames.funstoosh.R;
+
+public class PlayersActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

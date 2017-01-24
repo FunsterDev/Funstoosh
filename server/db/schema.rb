@@ -20,12 +20,12 @@ ActiveRecord::Schema.define(version: 20170122144432) do
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "country_code",        null: false
     t.string   "phone_number",        null: false
-    t.string   "gcm_registration_id", null: false
+    t.string   "fcm_registration_id", null: false
     t.integer  "game_id"
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
-    t.index ["country_code", "phone_number"], name: "index_users_on_country_code_and_phone_number", unique: true, using: :btree
     t.index ["game_id"], name: "index_users_on_game_id", using: :btree
+    t.index ["phone_number"], name: "index_users_on_phone_number", unique: true, using: :btree
   end
 
   add_foreign_key "users", "games", on_delete: :nullify

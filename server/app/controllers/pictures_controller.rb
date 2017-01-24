@@ -14,12 +14,12 @@ class PicturesController < ApplicationController
       who: current_user.phone_number,
       path: filename
 
-    render nothing: true, status: :created
+    head :created
   end
 
   def show
     fullpath = File.join(current_game.path, params[:id])
-    return render nothing: true, status: :not_found if not File.exists?(fullpath)
+    return head :not_found if not File.exists?(fullpath)
     data = File.open(fullpath, 'rb') { |f| f.read }
 
     send_data data, type: 'image/jpeg', disposition: 'inline'

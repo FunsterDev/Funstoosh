@@ -1,80 +1,76 @@
-package com.funstergames.funstoosh;
+package com.funstergames.funstoosh.activities;
 
+import android.*;
+import android.Manifest;
 import android.content.ContentResolver;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
 
+import com.funstergames.funstoosh.Constants;
+import com.funstergames.funstoosh.adapters.ContactsAdapter;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.Response;
+
+import org.apache.commons.lang3.StringUtils;
+import com.funstergames.funstoosh.R;
+
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class CreateGroup extends AppCompatActivity {
+public class CreateGroupActivity extends AppCompatActivity {
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 0;
+
+    private ListView _contactsList;
+    private ContactsAdapter _contactsAdapter;
+
+    // Name, Phone number
+    private ArrayList<Map.Entry<String, String>> availableContacts = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
 
+        _contactsList = (ListView)findViewById(R.id.contacts_list);
 
-
-        //This class provides applications access to the content model.
-        ContentResolver cr = getApplicationContext().getContentResolver();
-
-//RowContacts for filter Account Types
-        Cursor contactCursor = cr.query(
-                ContactsContract.RawContacts.CONTENT_URI,
-                new String[]{ContactsContract.RawContacts._ID,
-                        ContactsContract.RawContacts.CONTACT_ID},
-                ContactsContract.RawContacts.ACCOUNT_TYPE + "= ?",
-                new String[]{"com.whatsapp"},
-                null);
-
-//ArrayList for Store Whatsapp Contact
-        ArrayList<String> myWhatsappContacts = new ArrayList<>();
-
-        if (contactCursor != null) {
-            if (contactCursor.getCount() > 0) {
-                if (contactCursor.moveToFirst()) {
-                    do {
-                        //whatsappContactId for get Number,Name,Id ect... from  ContactsContract.CommonDataKinds.Phone
-                        String whatsappContactId = contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.RawContacts.CONTACT_ID));
-
-                        if (whatsappContactId != null) {
-                            //Get Data from ContactsContract.CommonDataKinds.Phone of Specific CONTACT_ID
-                            Cursor whatsAppContactCursor = cr.query(
-                                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                                    new String[]{ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
-                                            ContactsContract.CommonDataKinds.Phone.NUMBER,
-                                            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME},
-                                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                                    new String[]{whatsappContactId}, null);
-
-                            if (whatsAppContactCursor != null) {
-                                whatsAppContactCursor.moveToFirst();
-                                String id = whatsAppContactCursor.getString(whatsAppContactCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
-                                String name = whatsAppContactCursor.getString(whatsAppContactCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                                String number = whatsAppContactCursor.getString(whatsAppContactCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-
-                                whatsAppContactCursor.close();
-
-                                //Add Number to ArrayList
-                                myWhatsappContacts.add(number);
-
-                              //  showLogI(TAG, " WhatsApp contact id  :  " + id);
-                              //  showLogI(TAG, " WhatsApp contact name :  " + name);
-                              //  showLogI(TAG, " WhatsApp contact number :  " + number);
-                            }
-                        }
-                    } while (contactCursor.moveToNext());
-                    contactCursor.close();
-                }
-            }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[] { android.Manifest.permission.READ_CONTACTS },
+                    PERMISSIONS_REQUEST_READ_CONTACTS);
+        } else {
+            initializeContacts();
         }
+    }
 
-      //  showLogI(TAG, " WhatsApp contact size :  " + myWhatsappContacts.size());
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_READ_CONTACTS:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    initializeContacts();
+                }
+                break;
+        }
+    }
 
+    private void initializeContacts() {
+        _contactsAdapter = new ContactsAdapter(this);
+        _contactsList.setAdapter(_contactsAdapter);
+    }
 
+    public void createGroup(View view) {
         
-
     }
 }

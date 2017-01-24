@@ -46,10 +46,10 @@ GEM
     byebug (9.0.6)
     concurrent-ruby (1.0.4)
     erubis (2.7.0)
-    ffi (1.9.17)
-    gcm (0.1.1)
+    fcm (0.0.2)
       httparty
       json
+    ffi (1.9.17)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
     httparty (0.14.0)
@@ -131,7 +131,7 @@ PLATFORMS
 DEPENDENCIES
   annotate
   byebug
-  gcm
+  fcm
   listen (~> 3.0.5)
   mysql2
   puma (~> 3.0)

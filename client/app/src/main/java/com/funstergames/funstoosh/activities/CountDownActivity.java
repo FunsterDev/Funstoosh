@@ -1,4 +1,4 @@
-package com.funstergames.funstoosh;
+package com.funstergames.funstoosh.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,17 +12,13 @@ import java.util.concurrent.TimeUnit;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.view.Menu;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.TextView;
 
-public class CountDownView extends AppCompatActivity {
+import com.funstergames.funstoosh.R;
+import com.funstergames.funstoosh.views.TimerView;
+
+public class CountDownActivity extends AppCompatActivity {
 
     private static final int TIMER_LENGTH = 5;
 
@@ -38,7 +34,7 @@ public class CountDownView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_count_down_view);
+        setContentView(R.layout.activity_count_down);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -53,7 +49,7 @@ public class CountDownView extends AppCompatActivity {
         mTimerView.start(TIMER_LENGTH);
         timer.start();
 
-        gameON =    new Intent(CountDownView.this, PlayersView.class);
+        gameON =    new Intent(CountDownActivity.this, PlayersActivity.class);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

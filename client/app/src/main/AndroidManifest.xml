@@ -6,11 +6,10 @@
         android:name="android.hardware.camera"
         android:required="true" />
 
+    <!-- To get current device's phone number -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- To invite friends to game -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
 
     <application
         android:allowBackup="true"
@@ -18,7 +17,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,25 +26,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CountDownView"
+            android:name=".activities.CountDownActivity"
             android:label="@string/title_activity_count_down_view"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".PlayersView"
+            android:name=".activities.PlayersActivity"
             android:label="@string/title_activity_players_view"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".CreateGroup" />
+        <activity android:name=".activities.CreateGroupActivity" />
         <activity
-            android:name=".SeekerView"
+            android:name=".activities.SeekerActivity"
             android:label="@string/title_activity_seeker_view"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".HintPictureGallery"
+            android:name=".activities.HintPictureGalleryActivity"
             android:label="@string/title_activity_hint_picture_gallery"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+        <activity android:name=".activities.MenuActivity" />
+        <activity android:name=".activities.ReadyActivity" />
     </application>
 
 </manifest>

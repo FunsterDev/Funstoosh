@@ -1,4 +1,4 @@
-package com.funstergames.funstoosh;
+package com.funstergames.funstoosh.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,7 +10,10 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-public class HintPictureGallery extends AppCompatActivity {
+import com.funstergames.funstoosh.R;
+import com.funstergames.funstoosh.adapters.ImageAdapter;
+
+public class HintPictureGalleryActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +34,12 @@ public class HintPictureGallery extends AppCompatActivity {
 
 
                 GridView gridview = (GridView) findViewById(R.id.gridview);
-                gridview.setAdapter(new ImageAdapter(HintPictureGallery.this));
+                gridview.setAdapter(new ImageAdapter(HintPictureGalleryActivity.this));
 
                 gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     public void onItemClick(AdapterView<?> parent, View v,
                                             int position, long id) {
-                        Toast.makeText(HintPictureGallery.this, "" + position,
+                        Toast.makeText(HintPictureGalleryActivity.this, "" + position,
                                 Toast.LENGTH_SHORT).show();
                     }
                 });

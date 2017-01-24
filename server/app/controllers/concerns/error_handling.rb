@@ -7,10 +7,10 @@ module Concerns::ErrorHandling
   end
 
   def handle_record_not_found
-    render nothing: true, status: :not_found
+    head :not_found
   end
 
   def handle_record_invalid
-    render nothing: true, status: :unprocessable_entity
+    head :unprocessable_entity
   end
 end

@@ -1,4 +1,4 @@
-package com.funstergames.funstoosh;
+package com.funstergames.funstoosh.views;
 
 /**
  * Created by Hila on 07/01/2017.
@@ -6,7 +6,6 @@ package com.funstergames.funstoosh;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;

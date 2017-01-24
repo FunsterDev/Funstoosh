@@ -15,11 +15,11 @@ module Concerns::SessionManagement
   end
 
   def require_session
-    render nothing: true, status: :forbidden if not current_user
+    head :forbidden if not current_user
   end
 
   def require_playing
-    render nothing: true, status: :forbidden if not current_user.game_id
+    head :forbidden if not current_user.game_id
   end
 
   class_methods do
