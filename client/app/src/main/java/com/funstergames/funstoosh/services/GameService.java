@@ -48,6 +48,7 @@ public class GameService extends Service {
     public static final String BROADCAST_PLAYERS_UPDATED = "players_updated";
     public static final String BROADCAST_READY = "ready";
     public static final String BROADCAST_START = "start";
+    public static final String BROADCAST_PICTURES_UPDATED = "pictures_updated";
     public static final String BROADCAST_MESSAGES_UPDATED = "messages_updated";
     public static final String BROADCAST_SCORE_UPDATED = "score_updated";
 
@@ -60,8 +61,10 @@ public class GameService extends Service {
 
     // Phone number -> Player
     public HashMap<String, Player> players = new HashMap<>();
-    // Player, Picture id
+    // Player, Picture ID
     public ArrayList<Map.Entry<Player, String>> pictures = new ArrayList<>();
+    // Picture ID
+    public HashSet<String> usedPictures = new HashSet<>();
     // Player, Message body
     public ArrayList<Map.Entry<Player, String>> messages = new ArrayList<>();
 
@@ -114,8 +117,9 @@ public class GameService extends Service {
                     if (subscription != null) _consumer.getSubscriptions().remove(subscription);
 
                     players = new HashMap<>();
-                    messages = new ArrayList<>();
                     pictures = new ArrayList<>();
+                    usedPictures = new HashSet<>();
+                    messages = new ArrayList<>();
 
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
                         startActivity(
@@ -227,6 +231,7 @@ public class GameService extends Service {
                                 case "added_picture":
                                     player.addedPicture();
                                     pictures.add(new AbstractMap.SimpleEntry<>(player, message.get("path").getAsString()));
+                                    sendBroadcast(new Intent(BROADCAST_PICTURES_UPDATED));
                                     break;
 
                                 case "used_picture":

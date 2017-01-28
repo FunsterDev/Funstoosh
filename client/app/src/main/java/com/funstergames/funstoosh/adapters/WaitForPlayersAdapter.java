@@ -25,6 +25,7 @@ public class WaitForPlayersAdapter extends BaseAdapter {
     private List<Contact> _invited;
 
     private GameService _gameService;
+
     private ServiceConnection _serviceConnection;
     private BroadcastReceiver _playersUpdatedReceiver;
 
