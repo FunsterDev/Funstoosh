@@ -15,7 +15,7 @@ public class NotificationsManager {
     public static final int INVITE_NOTIFICATION_ID = 0;
     public static final int GAME_NOTIFICATION_ID = 1;
 
-    public static void invite(Context context, String name, int gameId) {
+    public static void invite(Context context, String name, String gameId) {
         getNotificationManager(context).notify(
                 INVITE_NOTIFICATION_ID,
                 new NotificationCompat.Builder(context)

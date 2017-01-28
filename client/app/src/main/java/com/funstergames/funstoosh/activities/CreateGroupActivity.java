@@ -78,7 +78,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                     public void onCompleted(Exception e, Response<JsonObject> result) {
                         if (e != null || result.getHeaders().code() != 201) return;
 
-                        int gameId = result.getResult().get("id").getAsInt();
+                        String gameId = result.getResult().get("id").getAsString();
                         startActivity(
                                 new Intent(CreateGroupActivity.this, WaitForPlayersActivity.class)
                                         .putExtra(WaitForPlayersActivity.EXTRA_GAME_ID, gameId)

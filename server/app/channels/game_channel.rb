@@ -40,11 +40,7 @@ class GameChannel < ApplicationCable::Channel
       type: 'start'
   end
 
-  def added_picture
-    GameChannel.broadcast_to @game,
-      type: 'added_picture',
-      who: current_user.phone_number
-  end
+  # added_picture comes from PicturesController
 
   def used_picture
     GameChannel.broadcast_to @game,

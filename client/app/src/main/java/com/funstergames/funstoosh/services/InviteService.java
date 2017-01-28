@@ -49,6 +49,6 @@ public class InviteService extends IntentService {
         String phoneNumber = intent.getStringExtra(EXTRA_WHO);
         String name = Contact.getNameByPhoneNumber(this, phoneNumber);
         if (name == null) name = phoneNumber;
-        NotificationsManager.invite(this, name, intent.getIntExtra(EXTRA_GAME_ID, -1));
+        NotificationsManager.invite(this, name, intent.getStringExtra(EXTRA_GAME_ID));
     }
 }

@@ -66,7 +66,7 @@ public class WaitForPlayersActivity extends AppCompatActivity {
         _readyReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                startActivity(new Intent(WaitForPlayersActivity.this, ReadyActivity.class));
+                startActivity(new Intent(WaitForPlayersActivity.this, _gameService.getActivityByState()));
                 finish();
             }
         };
@@ -75,7 +75,7 @@ public class WaitForPlayersActivity extends AppCompatActivity {
         startService(
                 new Intent(this, GameService.class)
                         .setAction(GameService.ACTION_START_GAME)
-                        .putExtra(GameService.EXTRA_GAME_ID, getIntent().getIntExtra(EXTRA_GAME_ID, -1))
+                        .putExtra(GameService.EXTRA_GAME_ID, getIntent().getStringExtra(EXTRA_GAME_ID))
         );
         // finish when game ends
         _serviceConnection = new ServiceConnection() {

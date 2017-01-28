@@ -25,11 +25,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.CountDownActivity"
+            android:name=".activities.CountdownActivity"
             android:label="@string/title_activity_count_down_view"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.PlayersActivity"
+            android:name=".activities.PlayerActivity"
             android:label="@string/title_activity_players_view"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.CreateGroupActivity" />

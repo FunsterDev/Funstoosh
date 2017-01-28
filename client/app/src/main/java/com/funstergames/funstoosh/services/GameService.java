@@ -1,6 +1,7 @@
 package com.funstergames.funstoosh.services;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,12 +13,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.funstergames.funstoosh.Constants;
-import com.funstergames.funstoosh.Contact;
 import com.funstergames.funstoosh.Player;
-import com.funstergames.funstoosh.activities.CreateGroupActivity;
+import com.funstergames.funstoosh.activities.CountdownActivity;
 import com.funstergames.funstoosh.activities.LoginActivity;
+import com.funstergames.funstoosh.activities.PlayerActivity;
 import com.funstergames.funstoosh.activities.ReadyActivity;
 import com.funstergames.funstoosh.activities.RequestPermissionActivity;
+import com.funstergames.funstoosh.activities.SeekerActivity;
 import com.funstergames.funstoosh.activities.WaitForPlayersActivity;
 import com.funstergames.funstoosh.managers.NotificationsManager;
 import com.google.gson.JsonElement;
@@ -54,12 +56,16 @@ public class GameService extends Service {
     private Consumer _consumer;
     public Subscription subscription;
 
-    private int _gameId = -1;
+    private String _gameId = null;
 
     // Phone number -> Player
-    public Player self;
     public HashMap<String, Player> players = new HashMap<>();
+    // Player, Picture id
+    public ArrayList<Map.Entry<Player, String>> pictures = new ArrayList<>();
+    // Player, Message body
     public ArrayList<Map.Entry<Player, String>> messages = new ArrayList<>();
+
+    public Player self;
 
     public enum State {
         WAITING,
@@ -68,6 +74,12 @@ public class GameService extends Service {
     }
 
     public State state = State.WAITING;
+
+    // Gameplay
+    public Player seeker;
+    public long countdownStartedAt = -1;
+
+    public static final long COUNTDOWN_TIME = 30000;
 
     @Override
     public void onCreate() {
@@ -95,20 +107,22 @@ public class GameService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         switch (intent.getAction()) {
             case ACTION_START_GAME:
-                int gameId = intent.getIntExtra(EXTRA_GAME_ID, -1);
-                if (gameId != -1 && gameId != _gameId) {
+                String gameId = intent.getStringExtra(EXTRA_GAME_ID);
+                if (gameId != null && !gameId.equals(_gameId)) {
                     _gameId = gameId;
                     // leaving previous game
                     if (subscription != null) _consumer.getSubscriptions().remove(subscription);
 
                     players = new HashMap<>();
                     messages = new ArrayList<>();
+                    pictures = new ArrayList<>();
 
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
                         startActivity(
                                 new Intent(this, RequestPermissionActivity.class)
                                         .putExtra(RequestPermissionActivity.EXTRA_SERVICE, getClass())
                                         .putExtra(RequestPermissionActivity.EXTRA_PERMISSION, Manifest.permission.READ_CONTACTS)
+                                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         );
                     } else {
                         connect();
@@ -143,12 +157,6 @@ public class GameService extends Service {
         Channel channel = new Channel("GameChannel");
         channel.addParam("id", _gameId);
         subscription = _consumer.getSubscriptions().create(channel)
-                .onConnected(new Subscription.ConnectedCallback() {
-                    @Override
-                    public void call() {
-                        return;
-                    }
-                })
                 .onDisconnected(new Subscription.DisconnectedCallback() {
                     @Override
                     public void call() {
@@ -185,10 +193,13 @@ public class GameService extends Service {
                                         currentPlayers.add(phoneNumber);
                                         if (!players.containsKey(phoneNumber)) {
                                             player = new Player(GameService.this, phoneNumber);
+
+                                            if (seeker == null) seeker = player;
                                             if (phoneNumber.equals(PreferenceManager.getDefaultSharedPreferences(GameService.this).getString(LoginActivity.PREFERENCE_LOGGED_IN_PHONE_NUMBER, null))) {
                                                 self = player;
                                                 player.name = "You";
                                             }
+
                                             players.put(phoneNumber, player);
                                         }
                                     }
@@ -204,18 +215,18 @@ public class GameService extends Service {
 
                                 case "ready":
                                     state = State.READY;
-                                    startActivityByState();
                                     sendBroadcast(new Intent(BROADCAST_READY));
                                     break;
 
                                 case "start":
                                     state = State.PLAYING;
-                                    startActivityByState();
+                                    countdownStartedAt = System.currentTimeMillis();
                                     sendBroadcast(new Intent(BROADCAST_START));
                                     break;
 
                                 case "added_picture":
                                     player.addedPicture();
+                                    pictures.add(new AbstractMap.SimpleEntry<>(player, message.get("path").getAsString()));
                                     break;
 
                                 case "used_picture":
@@ -253,17 +264,32 @@ public class GameService extends Service {
                 });
     }
 
-    private void startActivityByState() {
+    public Class<? extends Activity> getActivityByState() {
         switch (state) {
             case WAITING:
-                startActivity(new Intent(this, WaitForPlayersActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                break;
+                return WaitForPlayersActivity.class;
             case READY:
-                startActivity(new Intent(this, ReadyActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                break;
+                if (seeker == self) {
+                    return ReadyActivity.class;
+                } else {
+                    return CountdownActivity.class;
+                }
             case PLAYING:
-                // TODO
-                break;
+                if (System.currentTimeMillis() - countdownStartedAt < COUNTDOWN_TIME) {
+                    return CountdownActivity.class;
+                } else {
+                    if (seeker == self) {
+                        return SeekerActivity.class;
+                    } else {
+                        return PlayerActivity.class;
+                    }
+                }
+            default:
+                return null;
         }
+    }
+
+    private void startActivityByState() {
+        startActivity(new Intent(this, getActivityByState()).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 }

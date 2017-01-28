@@ -1,9 +1,5 @@
 package com.funstergames.funstoosh.views;
 
-/**
- * Created by Hila on 07/01/2017.
- */
-
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -17,7 +13,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import java.util.concurrent.TimeUnit;
-
 
 public class TimerView extends View {
 
@@ -100,11 +95,11 @@ public class TimerView extends View {
         canvas.drawBitmap(mBitmap, 0, 0, null);
     }
 
-    public void start(int secs) {
+    public void start(long millis) {
         stop();
 
         mTimerAnimator = ValueAnimator.ofFloat(0f, 1f);
-        mTimerAnimator.setDuration(TimeUnit.SECONDS.toMillis(secs));
+        mTimerAnimator.setDuration(millis);
         mTimerAnimator.setInterpolator(new LinearInterpolator());
         mTimerAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override

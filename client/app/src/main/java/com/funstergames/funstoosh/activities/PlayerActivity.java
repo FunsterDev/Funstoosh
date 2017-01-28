@@ -11,7 +11,7 @@ import android.provider.MediaStore;
 
 import com.funstergames.funstoosh.R;
 
-public class PlayersActivity extends AppCompatActivity {
+public class PlayerActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

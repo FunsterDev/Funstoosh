@@ -25,7 +25,7 @@ public class MessagingService extends FirebaseMessagingService {
                         new Intent(this, InviteService.class)
                                 .setAction(InviteService.ACTION_INVITED)
                                 .putExtra(InviteService.EXTRA_WHO, remoteMessage.getData().get("who"))
-                                .putExtra(InviteService.EXTRA_GAME_ID, Integer.valueOf(remoteMessage.getData().get("game_id")))
+                                .putExtra(InviteService.EXTRA_GAME_ID, remoteMessage.getData().get("game_id"))
                 );
                 break;
         }

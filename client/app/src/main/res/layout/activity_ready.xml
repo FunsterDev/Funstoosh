@@ -23,6 +23,6 @@
         android:paddingStart="25dp"
         android:paddingEnd="20dp"
         android:clickable="true"
-        android:onClick="start_countdown"/>
+        android:onClick="start"/>
 
-    </FrameLayout>
+</FrameLayout>

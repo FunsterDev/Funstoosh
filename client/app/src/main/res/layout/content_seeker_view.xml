@@ -26,7 +26,8 @@
         android:textColor="@color/abc_primary_text_material_dark"
         android:scaleType="fitCenter"
         android:paddingStart="3dp"
-        android:paddingEnd="3dp" />
+        android:paddingEnd="3dp"
+        android:onClick="getPictureHint" />
 
 
 </FrameLayout>
