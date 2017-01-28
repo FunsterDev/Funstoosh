@@ -15,6 +15,14 @@
     android:background="@drawable/main_gradient">
 
 
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="top|left"
+        android:gravity="left">
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -65,7 +73,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
 
         <LinearLayout
             android:id="@+id/choosePowerView"
@@ -150,29 +157,124 @@
 
     </LinearLayout>
 
-    <ImageButton
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:id="@+id/Start"
-        android:src="@drawable/magic_face_white_big"
-        android:layout_gravity="center"
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center|center_vertical|center_horizontal"
-        android:background="@drawable/round_hint"
+        android:orientation="horizontal">
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/Yes"
+            android:src="@drawable/happyface_green_small"
+            android:layout_gravity="center"
+            android:background="@drawable/round_hint"
+            android:textColor="@color/abc_primary_text_material_dark"
+            android:scaleType="fitCenter"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp" />
+        <ImageButton
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/Start"
+            android:src="@drawable/magic_face_white_big"
+            android:layout_gravity="center"
+            android:background="@drawable/round_hint"
+            android:textColor="@color/abc_primary_text_material_dark"
+            android:scaleType="fitCenter"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp" />
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/No"
+            android:src="@drawable/sadface_red_small"
+            android:layout_gravity="center"
+            android:background="@drawable/round_hint"
+            android:textColor="@color/abc_primary_text_material_dark"
+            android:scaleType="fitCenter"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp" />
+    </LinearLayout>
+</LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical|center|clip_horizontal"
+    android:orientation="horizontal"
+    android:layout_gravity="bottom">
+
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/Yes1"
+        android:layout_gravity="center"
+        android:background="@drawable/round_green"
         android:textColor="@color/abc_primary_text_material_dark"
         android:scaleType="fitCenter"
         android:paddingStart="3dp"
-        android:paddingEnd="3dp" />
-
-
-    <TextView
+        android:paddingEnd="3dp"
+        tools:text="3" />
+    <Button
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:id="@+id/inthegame"
+        android:layout_gravity="center"
+        android:background="@drawable/round_white"
+        android:textColor="@android:color/white"
+        android:scaleType="fitCenter"
+        android:paddingStart="3dp"
+        android:paddingEnd="3dp"
+        android:text="2" />
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/No1"
+        android:layout_gravity="center"
+        android:background="@drawable/round_red"
+        android:textColor="@color/abc_primary_text_material_dark"
+        android:scaleType="fitCenter"
+        android:paddingStart="3dp"
+        android:paddingEnd="3dp"
+        tools:text="1" />
+</LinearLayout>
+    <LinearLayout
+        android:id="@+id/PointsView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/title_activity_players_view"
-        android:id="@+id/textView2"
-        android:layout_gravity="left|top"
-        android:layout_margin="10dp" />
+        android:orientation="horizontal"
+        android:layout_gravity="top"
+        android:clickable="false"
+        android:padding="5dp"
+        android:layout_marginBottom="5dp">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:clickable="true"
+            android:onClick="addPicture"
+            android:background="@color/colorPoints">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:text="103"
+                android:layout_margin="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="15dp" />
 
+        </LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/left_triangle_blue"
+            android:layout_margin="0dp"
+            android:minHeight="22dp"
+            android:minWidth="40dp"
+            android:scaleType="center" />
+    </LinearLayout>
 </FrameLayout>
