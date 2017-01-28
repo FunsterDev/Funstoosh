@@ -36,6 +36,11 @@ public class Contact implements Parcelable {
         return phoneNumber.equals(other.phoneNumber);
     }
 
+    @Override
+    public int hashCode() {
+        return phoneNumber.hashCode();
+    }
+
     public static String getNameByPhoneNumber(Context context, String phoneNumber) {
         if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             return null;

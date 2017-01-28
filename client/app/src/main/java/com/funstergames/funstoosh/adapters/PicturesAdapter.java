@@ -21,6 +21,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class PicturesAdapter extends BaseAdapter {
@@ -33,6 +34,7 @@ public class PicturesAdapter extends BaseAdapter {
 
     private ServiceConnection _serviceConnection;
     private BroadcastReceiver _picturesUpdatedReceiver;
+    private BroadcastReceiver _usedWandReceiver;
 
     public PicturesAdapter(Context context) {
         initializeService(context);
@@ -47,6 +49,14 @@ public class PicturesAdapter extends BaseAdapter {
             }
         };
         context.registerReceiver(_picturesUpdatedReceiver, new IntentFilter(GameService.BROADCAST_PICTURES_UPDATED));
+
+        _usedWandReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                notifyDataSetChanged();
+            }
+        };
+        context.registerReceiver(_usedWandReceiver, new IntentFilter(GameService.BROADCAST_USED_MAGIC_WAND_UPDATED));
 
         _serviceConnection = new ServiceConnection() {
             @Override
@@ -92,6 +102,14 @@ public class PicturesAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return 0;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        Map.Entry<Player, String> picture = getItem(position);
+        if (picture == null) return false;
+        if (cache.get(picture.getValue()) == null) return false;
+        return _gameService.usedMagicWand.containsKey(picture.getKey());
     }
 
     @Override

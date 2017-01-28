@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameService extends Service {
     public static final String ACTION_START_GAME = "start_game";
@@ -49,10 +51,9 @@ public class GameService extends Service {
     public static final String BROADCAST_READY = "ready";
     public static final String BROADCAST_START = "start";
     public static final String BROADCAST_PICTURES_UPDATED = "pictures_updated";
+    public static final String BROADCAST_USED_MAGIC_WAND_UPDATED = "used_magic_wand_updated";
     public static final String BROADCAST_MESSAGES_UPDATED = "messages_updated";
     public static final String BROADCAST_SCORE_UPDATED = "score_updated";
-
-    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 0;
 
     private Consumer _consumer;
     public Subscription subscription;
@@ -65,6 +66,7 @@ public class GameService extends Service {
     public ArrayList<Map.Entry<Player, String>> pictures = new ArrayList<>();
     // Picture ID
     public HashSet<String> usedPictures = new HashSet<>();
+    public HashMap<Player, Timer> usedMagicWand = new HashMap<>();
     // Player, Message body
     public ArrayList<Map.Entry<Player, String>> messages = new ArrayList<>();
 
@@ -83,6 +85,7 @@ public class GameService extends Service {
     public long countdownStartedAt = -1;
 
     public static final long COUNTDOWN_TIME = 30000;
+    public static final long MAGIC_WAND_TIME = 30000;
 
     @Override
     public void onCreate() {
@@ -119,6 +122,7 @@ public class GameService extends Service {
                     players = new HashMap<>();
                     pictures = new ArrayList<>();
                     usedPictures = new HashSet<>();
+                    usedMagicWand = new HashMap<>();
                     messages = new ArrayList<>();
 
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
@@ -240,6 +244,7 @@ public class GameService extends Service {
 
                                 case "used_magic_wand":
                                     player.usedMagicWand();
+                                    startMagicWand(player);
                                     break;
 
                                 case "win":
@@ -296,5 +301,21 @@ public class GameService extends Service {
 
     private void startActivityByState() {
         startActivity(new Intent(this, getActivityByState()).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+    }
+
+    private void startMagicWand(final Player player) {
+        Timer oldTimer = usedMagicWand.get(player);
+        if (oldTimer != null) oldTimer.cancel();
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                usedMagicWand.remove(player);
+                sendBroadcast(new Intent(BROADCAST_USED_MAGIC_WAND_UPDATED));
+            }
+        }, MAGIC_WAND_TIME);
+        usedMagicWand.put(player, timer);
+        sendBroadcast(new Intent(BROADCAST_USED_MAGIC_WAND_UPDATED));
     }
 }

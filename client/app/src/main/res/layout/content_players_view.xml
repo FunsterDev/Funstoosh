@@ -44,7 +44,7 @@
                 android:orientation="horizontal"
                 android:gravity="center"
                 android:clickable="true"
-                android:onClick="startCamera"
+                android:onClick="addPicture"
                 android:background="@color/color_action_button_BG">
 
                 <TextView
@@ -89,7 +89,8 @@
                 android:orientation="horizontal"
                 android:gravity="center"
                 android:clickable="true"
-                android:background="@color/color_action_button_BG">
+                android:background="@color/color_action_button_BG"
+                android:onClick="useMagicWand" >
 
                 <TextView
                     android:layout_width="wrap_content"

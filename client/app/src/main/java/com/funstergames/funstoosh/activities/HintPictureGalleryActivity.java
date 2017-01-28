@@ -42,15 +42,14 @@ public class HintPictureGalleryActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Map.Entry<Player, String> picture = _gameService.pictures.get(position);
-                Bitmap image = _picturesAdapter.cache.get(picture.getValue());
-                if (image != null) {
+                if (!_gameService.usedPictures.contains(picture.getValue())) {
                     _gameService.usedPictures.add(picture.getValue());
                     _gameService.subscription.perform("used_picture");
-                    startActivity(
-                            new Intent(HintPictureGalleryActivity.this, PictureActivity.class)
-                                    .putExtra(PictureActivity.EXTRA_BITMAP, image)
-                    );
                 }
+                startActivity(
+                        new Intent(HintPictureGalleryActivity.this, PictureActivity.class)
+                                .putExtra(PictureActivity.EXTRA_BITMAP, _picturesAdapter.cache.get(picture.getValue()))
+                );
             }
         });
 
