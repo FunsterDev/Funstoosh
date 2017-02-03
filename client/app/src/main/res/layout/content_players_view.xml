@@ -47,6 +47,7 @@
                 android:layout_marginRight="-17dp" />
 
             <LinearLayout
+                android:id="@+id/take_picture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -91,6 +92,7 @@
                 android:layout_marginRight="-17dp" />
 
             <LinearLayout
+                android:id="@+id/magic_wand"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -164,16 +166,17 @@
         android:gravity="center|center_vertical|center_horizontal"
         android:orientation="horizontal">
         <ImageButton
+            android:id="@+id/win"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/Yes"
             android:src="@drawable/happyface_green_small"
             android:layout_gravity="center"
             android:background="@drawable/round_hint"
             android:textColor="@color/abc_primary_text_material_dark"
             android:scaleType="fitCenter"
             android:paddingStart="3dp"
-            android:paddingEnd="3dp" />
+            android:paddingEnd="3dp"
+            android:onClick="win" />
         <ImageButton
             android:layout_width="150dp"
             android:layout_height="150dp"
@@ -186,16 +189,17 @@
             android:paddingStart="3dp"
             android:paddingEnd="3dp" />
         <ImageButton
+            android:id="@+id/lose"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/No"
             android:src="@drawable/sadface_red_small"
             android:layout_gravity="center"
             android:background="@drawable/round_hint"
             android:textColor="@color/abc_primary_text_material_dark"
             android:scaleType="fitCenter"
             android:paddingStart="3dp"
-            android:paddingEnd="3dp" />
+            android:paddingEnd="3dp"
+            android:onClick="lose" />
     </LinearLayout>
 </LinearLayout>
 <LinearLayout
@@ -205,40 +209,37 @@
     android:orientation="horizontal"
     android:layout_gravity="bottom">
 
-    <Button
+    <TextView
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/Yes1"
+        android:id="@+id/won"
         android:layout_gravity="center"
         android:background="@drawable/round_green"
         android:textColor="@color/abc_primary_text_material_dark"
         android:scaleType="fitCenter"
         android:paddingStart="3dp"
-        android:paddingEnd="3dp"
-        tools:text="3" />
-    <Button
+        android:paddingEnd="3dp" />
+    <TextView
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:id="@+id/inthegame"
+        android:id="@+id/playing"
         android:layout_gravity="center"
         android:background="@drawable/round_white"
         android:textColor="@android:color/white"
         android:scaleType="fitCenter"
         android:paddingStart="3dp"
-        android:paddingEnd="3dp"
-        android:text="2" />
-    <Button
+        android:paddingEnd="3dp" />
+    <TextView
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/No1"
+        android:id="@+id/lost"
         android:layout_gravity="center"
         android:background="@drawable/round_red"
         android:textColor="@color/abc_primary_text_material_dark"
         android:scaleType="fitCenter"
         android:paddingStart="3dp"
-        android:paddingEnd="3dp"
-        tools:text="1" />
-</LinearLayout>
+        android:paddingEnd="3dp" />
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/PointsView"
         android:layout_width="wrap_content"
@@ -259,10 +260,10 @@
             android:background="@color/colorPoints">
 
             <TextView
+                android:id="@+id/score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
-                android:text="103"
                 android:layout_margin="10dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="15dp" />

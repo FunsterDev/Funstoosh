@@ -3,6 +3,7 @@ package com.funstergames.funstoosh.activities;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.AbsoluteLayout;
 import android.widget.ImageView;
 
 public class PictureActivity extends AppCompatActivity {

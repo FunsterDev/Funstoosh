@@ -7,7 +7,7 @@ class PicturesController < ApplicationController
     filename = "#{current_user.id}_#{Time.now.strftime('%Y%m%d_%H%M%S.jpg')}"
     fullpath = File.join(current_game.path, filename)
 
-    File.open(fullpath, filename), 'wb') { |f| f.write(params[:file]) }
+    File.open(fullpath, 'wb') { |f| f.write(params[:file].read) }
 
     GameChannel.broadcast_to current_user.game,
       type: 'added_picture',
@@ -18,7 +18,7 @@ class PicturesController < ApplicationController
   end
 
   def show
-    fullpath = File.join(current_game.path, params[:id])
+    fullpath = File.join(current_game.path, "#{params[:id]}.#{params[:format]}")
     return head :not_found if not File.exists?(fullpath)
     data = File.open(fullpath, 'rb') { |f| f.read }
 

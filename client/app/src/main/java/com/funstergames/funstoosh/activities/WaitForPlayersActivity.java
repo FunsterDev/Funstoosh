@@ -56,10 +56,10 @@ public class WaitForPlayersActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (_serviceConnection != null) unbindService(_serviceConnection);
         unregisterReceiver(_readyReceiver);
         _waitForPlayersAdapter.onDestroy(this);
+        super.onDestroy();
     }
 
     private void initializeService() {

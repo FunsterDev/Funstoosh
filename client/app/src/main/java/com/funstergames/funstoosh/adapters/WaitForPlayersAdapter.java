@@ -21,8 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WaitForPlayersAdapter extends BaseAdapter {
-    private ArrayList<Player> _players = new ArrayList<>();
-    private List<Contact> _invited;
+    private ArrayList<Contact> _invited;
 
     private GameService _gameService;
 
@@ -31,7 +30,7 @@ public class WaitForPlayersAdapter extends BaseAdapter {
 
     public WaitForPlayersAdapter(Context context, Contact[] invited) {
         if (invited != null) {
-            _invited = Arrays.asList(invited);
+            _invited = new ArrayList<>(Arrays.asList(invited));
         } else {
             _invited = new ArrayList<>();
         }
@@ -61,7 +60,6 @@ public class WaitForPlayersAdapter extends BaseAdapter {
                 _serviceConnection = null;
                 onDestroy(context);
                 _gameService = null;
-                _players.clear();
                 notifyDataSetChanged();
             }
         };
@@ -70,9 +68,7 @@ public class WaitForPlayersAdapter extends BaseAdapter {
 
     private void setPlayers() {
         if (_gameService == null) return;
-        _players.clear();
-        _players.addAll(_gameService.players.values());
-        for (Player player : _gameService.players.values()) {
+        for (Player player : _gameService.players) {
             _invited.remove(player);
         }
         notifyDataSetChanged();
@@ -91,15 +87,16 @@ public class WaitForPlayersAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return _players.size() + _invited.size();
+        if (_gameService == null) return 0;
+        return _gameService.players.size() + _invited.size();
     }
 
     @Override
     public Contact getItem(int position) {
-        if (position < _players.size()) {
-            return _players.get(position);
+        if (position < _gameService.players.size()) {
+            return _gameService.players.get(position);
         } else {
-            return _invited.get(position - _players.size());
+            return _invited.get(position - _gameService.players.size());
         }
     }
 
@@ -120,7 +117,7 @@ public class WaitForPlayersAdapter extends BaseAdapter {
 
         Contact contact = getItem(position);
         checkbox.setText(contact.toString());
-        checkbox.setChecked(position < _players.size());
+        checkbox.setChecked(position < _gameService.players.size());
 
         return checkbox;
     }

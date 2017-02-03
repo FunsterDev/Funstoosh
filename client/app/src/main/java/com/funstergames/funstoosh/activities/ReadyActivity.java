@@ -32,9 +32,9 @@ public class ReadyActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (_serviceConnection != null) unbindService(_serviceConnection);
         unregisterReceiver(_startReceiver);
+        super.onDestroy();
     }
 
     private void initializeService() {
@@ -45,7 +45,7 @@ public class ReadyActivity extends AppCompatActivity {
                 finish();
             }
         };
-        registerReceiver(_startReceiver, new IntentFilter(GameService.BROADCAST_READY));
+        registerReceiver(_startReceiver, new IntentFilter(GameService.BROADCAST_START));
 
         _serviceConnection = new ServiceConnection() {
             @Override

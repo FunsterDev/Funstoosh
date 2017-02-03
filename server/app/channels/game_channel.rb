@@ -13,7 +13,7 @@ class GameChannel < ApplicationCable::Channel
 
     GameChannel.broadcast_to @game,
       type: 'players',
-      phone_numbers: @game.users.reload.pluck(:phone_number)
+      phone_numbers: @game.users.reload.map(&:phone_number)
   end
 
   def unsubscribed
@@ -26,7 +26,7 @@ class GameChannel < ApplicationCable::Channel
 
       GameChannel.broadcast_to @game,
         type: 'players',
-        phone_numbers: @game.users.reload.pluck(:phone_number)
+        phone_numbers: @game.users.reload.map(&:phone_number)
     end
   end
 

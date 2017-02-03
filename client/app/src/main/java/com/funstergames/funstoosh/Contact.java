@@ -9,10 +9,16 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
+import android.telephony.PhoneNumberUtils;
 
 public class Contact implements Parcelable {
     public String phoneNumber;
     public String name;
+
+    // for lookup only
+    public Contact(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public Contact(Context context, String phoneNumber) {
         this(phoneNumber, getNameByPhoneNumber(context, phoneNumber));
@@ -33,12 +39,12 @@ public class Contact implements Parcelable {
         if (obj == null) return false;
         if (!Contact.class.isAssignableFrom(obj.getClass())) return false;
         Contact other = (Contact)obj;
-        return phoneNumber.equals(other.phoneNumber);
+        return PhoneNumberUtils.compare(phoneNumber, other.phoneNumber);
     }
 
     @Override
     public int hashCode() {
-        return phoneNumber.hashCode();
+        return PhoneNumberUtils.getStrippedReversed(phoneNumber).hashCode();
     }
 
     public static String getNameByPhoneNumber(Context context, String phoneNumber) {

@@ -25,8 +25,6 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class PicturesAdapter extends BaseAdapter {
-    // Picture ID -> Bitmap
-    public HashMap<String, Bitmap> cache = new HashMap<>();
     // Picture ID -> ImageView
     private HashMap<String, ImageView> _pendingLoad = new HashMap<>();
 
@@ -44,7 +42,6 @@ public class PicturesAdapter extends BaseAdapter {
         _picturesUpdatedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (_gameService == null) return;
                 notifyDataSetChanged();
             }
         };
@@ -85,6 +82,10 @@ public class PicturesAdapter extends BaseAdapter {
             context.unregisterReceiver(_picturesUpdatedReceiver);
             _picturesUpdatedReceiver = null;
         }
+        if (_usedWandReceiver != null) {
+            context.unregisterReceiver(_usedWandReceiver);
+            _usedWandReceiver = null;
+        }
     }
 
     @Override
@@ -108,8 +109,8 @@ public class PicturesAdapter extends BaseAdapter {
     public boolean isEnabled(int position) {
         Map.Entry<Player, String> picture = getItem(position);
         if (picture == null) return false;
-        if (cache.get(picture.getValue()) == null) return false;
-        return _gameService.usedMagicWand.containsKey(picture.getKey());
+        if (_gameService.picturesCache.get(picture.getValue()) == null) return false;
+        return !_gameService.usedMagicWand.containsKey(picture.getKey());
     }
 
     @Override
@@ -133,11 +134,11 @@ public class PicturesAdapter extends BaseAdapter {
         String pictureId = picture.getValue();
         imageView.setTag(pictureId);
 
-        if (!cache.containsKey(pictureId)) {
+        if (!_gameService.picturesCache.containsKey(pictureId)) {
             _pendingLoad.put(pictureId, imageView);
             loadImage(parent.getContext(), pictureId);
         } else {
-            Bitmap image = cache.get(pictureId);
+            Bitmap image = _gameService.picturesCache.get(pictureId);
             if (image == null) {
                 _pendingLoad.put(pictureId, imageView);
             } else {
@@ -149,7 +150,7 @@ public class PicturesAdapter extends BaseAdapter {
     }
 
     private void loadImage(Context context, final String pictureId) {
-        cache.put(pictureId, null);
+        _gameService.picturesCache.put(pictureId, null);
         Ion.with(context)
                 .load(Constants.ROOT_URL + "/pictures/" + pictureId)
                 .asBitmap()
@@ -158,7 +159,7 @@ public class PicturesAdapter extends BaseAdapter {
                     public void onCompleted(Exception e, Bitmap result) {
                         if (e != null || result == null) return;
 
-                        cache.put(pictureId, result);
+                        _gameService.picturesCache.put(pictureId, result);
                         if (_pendingLoad.containsKey(pictureId)) {
                             ImageView imageView = _pendingLoad.get(pictureId);
                             if (pictureId.equals(imageView.getTag())) {
