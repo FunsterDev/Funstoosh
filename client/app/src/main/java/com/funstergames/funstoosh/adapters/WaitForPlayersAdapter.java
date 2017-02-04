@@ -24,7 +24,6 @@ public class WaitForPlayersAdapter extends BaseAdapter {
     private ArrayList<Contact> _invited;
 
     private GameService _gameService;
-
     private ServiceConnection _serviceConnection;
     private BroadcastReceiver _playersUpdatedReceiver;
 
@@ -110,7 +109,7 @@ public class WaitForPlayersAdapter extends BaseAdapter {
         final CheckBox checkbox;
         if (convertView == null) {
             checkbox = new CheckBox(parent.getContext());
-            checkbox.setEnabled(false);
+            checkbox.setClickable(false);
         } else {
             checkbox = (CheckBox)convertView;
         }

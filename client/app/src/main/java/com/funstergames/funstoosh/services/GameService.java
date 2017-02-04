@@ -20,6 +20,7 @@ import com.funstergames.funstoosh.activities.LoginActivity;
 import com.funstergames.funstoosh.activities.PlayerActivity;
 import com.funstergames.funstoosh.activities.ReadyActivity;
 import com.funstergames.funstoosh.activities.RequestPermissionActivity;
+import com.funstergames.funstoosh.activities.ScoresActivity;
 import com.funstergames.funstoosh.activities.SeekerActivity;
 import com.funstergames.funstoosh.activities.WaitForPlayersActivity;
 import com.funstergames.funstoosh.managers.NotificationsManager;
@@ -56,6 +57,7 @@ public class GameService extends Service {
     public static final String BROADCAST_MESSAGES_UPDATED = "messages_updated";
     public static final String BROADCAST_SCORE_UPDATED = "score_updated";
     public static final String BROADCAST_WON_LOST_UPDATED = "won_lost_updated";
+    public static final String BROADCAST_GAME_OVER = "game_over";
 
     private Consumer _consumer;
     public Subscription subscription;
@@ -65,8 +67,6 @@ public class GameService extends Service {
     public ArrayList<Player> players = new ArrayList<>();
     // Player, Picture ID
     public ArrayList<Map.Entry<Player, String>> pictures = new ArrayList<>();
-    // Picture ID -> Bitmap
-    public HashMap<String, Bitmap> picturesCache = new HashMap<>();
     // Picture ID
     public HashSet<String> usedPictures = new HashSet<>();
     public HashMap<Player, Timer> usedMagicWand = new HashMap<>();
@@ -79,12 +79,14 @@ public class GameService extends Service {
         WAITING,
         READY,
         PLAYING,
+        SCORES,
     }
 
     public State state = State.WAITING;
 
     // Gameplay
     public Player seeker;
+    public Player nextSeeker;
     public long countdownStartedAt = -1;
 
     public int won = 0;
@@ -126,12 +128,7 @@ public class GameService extends Service {
                     if (subscription != null) _consumer.getSubscriptions().remove(subscription);
 
                     players = new ArrayList<>();
-                    pictures = new ArrayList<>();
-                    picturesCache = new HashMap<>();
-                    usedPictures = new HashSet<>();
-                    usedMagicWand = new HashMap<>();
                     messages = new ArrayList<>();
-                    won = lost = 0;
 
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
                         startActivity(
@@ -213,7 +210,7 @@ public class GameService extends Service {
                                         if (!players.contains(lookup)) {
                                             player = new Player(GameService.this, phoneNumber);
 
-                                            if (seeker == null) seeker = player;
+                                            if (seeker == null) seeker = nextSeeker = player;
                                             if (phoneNumber.equals(PreferenceManager.getDefaultSharedPreferences(GameService.this).getString(LoginActivity.PREFERENCE_LOGGED_IN_PHONE_NUMBER, null))) {
                                                 self = player;
                                                 player.name = "You";
@@ -238,7 +235,12 @@ public class GameService extends Service {
                                     break;
 
                                 case "start":
+                                    won = lost = 0;
+                                    pictures = new ArrayList<>();
+                                    usedPictures = new HashSet<>();
+                                    usedMagicWand = new HashMap<>();
                                     state = State.PLAYING;
+                                    for (Player p : players) p.restartGame();
                                     countdownStartedAt = System.currentTimeMillis();
                                     sendBroadcast(new Intent(BROADCAST_START));
                                     break;
@@ -259,15 +261,16 @@ public class GameService extends Service {
                                     break;
 
                                 case "win":
-                                    player.win();
-                                    seeker.playerWon();
+                                    player.win(players.size());
+                                    seeker.playerWon(players.size());
                                     won++;
                                     sendBroadcast(new Intent(BROADCAST_WON_LOST_UPDATED));
                                     break;
 
                                 case "lose":
-                                    player.lose();
-                                    seeker.playerLost();
+                                    player.lose(players.size());
+                                    seeker.playerLost(players.size());
+                                    if (lost == 0) nextSeeker = player;
                                     lost++;
                                     sendBroadcast(new Intent(BROADCAST_WON_LOST_UPDATED));
                                     break;
@@ -285,8 +288,21 @@ public class GameService extends Service {
                                     break;
                             }
 
-                            if (originalScore != null && originalScore != self.score)
+                            switch (message.get("type").getAsString()) {
+                                case "win":
+                                case "lose":
+                                    if (won + lost >= players.size() - 1) {
+                                        seeker.gameOver(won, lost);
+                                        seeker = nextSeeker;
+                                        state = State.SCORES;
+                                        sendBroadcast(new Intent(BROADCAST_GAME_OVER));
+                                    }
+                                    break;
+                            }
+
+                            if (originalScore != null && originalScore != self.score) {
                                 sendBroadcast(new Intent(BROADCAST_SCORE_UPDATED));
+                            }
                         }
                 });
     }
@@ -311,6 +327,8 @@ public class GameService extends Service {
                         return PlayerActivity.class;
                     }
                 }
+            case SCORES:
+                return ScoresActivity.class;
             default:
                 return null;
         }

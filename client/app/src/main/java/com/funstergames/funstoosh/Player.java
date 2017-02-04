@@ -32,19 +32,27 @@ public class Player extends Contact {
         score -= SCORE_REQUIRED_FOR_MAGIC_WAND;
     }
 
-    public void win() {
+    public void win(int players) {
         state = State.WON;
-        score += 20;
+        score += 20 * players;
     }
 
-    public void lose() {
+    public void lose(int players) {
         state = State.LOST;
     }
 
-    public void playerWon() {
+    public void playerWon(int players) {
     }
 
-    public void playerLost() {
-        score += 10;
+    public void playerLost(int players) {
+        score += 10 * players;
+    }
+
+    public void gameOver(int won, int lost) {
+        if (won == 0) score += 100;
+    }
+
+    public void restartGame() {
+        state = State.PLAYING;
     }
 }

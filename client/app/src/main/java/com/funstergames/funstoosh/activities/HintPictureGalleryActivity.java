@@ -52,7 +52,7 @@ public class HintPictureGalleryActivity extends AppCompatActivity {
                 }
                 startActivity(
                         new Intent(HintPictureGalleryActivity.this, PictureActivity.class)
-                                .putExtra(PictureActivity.EXTRA_BITMAP, _gameService.picturesCache.get(picture.getValue()))
+                                .putExtra(PictureActivity.EXTRA_PICTURE_ID, picture.getValue())
                 );
             }
         });

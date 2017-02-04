@@ -17,7 +17,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -59,6 +58,8 @@
         <service
             android:name=".services.InviteService"
             android:exported="false" />
+
+        <activity android:name=".activities.ScoresActivity"></activity>
     </application>
 
 </manifest>

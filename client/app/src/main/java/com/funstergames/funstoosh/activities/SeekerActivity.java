@@ -20,6 +20,7 @@ public class SeekerActivity extends AppCompatActivity {
     private ServiceConnection _serviceConnection;
     private BroadcastReceiver _scoreUpdatedReceiver;
     private BroadcastReceiver _wonLostReceiver;
+    private BroadcastReceiver _gameOverReceiver;
 
     private GameService _gameService;
 
@@ -46,6 +47,7 @@ public class SeekerActivity extends AppCompatActivity {
         if (_serviceConnection != null) unbindService(_serviceConnection);
         unregisterReceiver(_scoreUpdatedReceiver);
         unregisterReceiver(_wonLostReceiver);
+        unregisterReceiver(_gameOverReceiver);
         super.onDestroy();
     }
 
@@ -66,6 +68,15 @@ public class SeekerActivity extends AppCompatActivity {
         };
         registerReceiver(_wonLostReceiver, new IntentFilter(GameService.BROADCAST_PLAYERS_UPDATED));
         registerReceiver(_wonLostReceiver, new IntentFilter(GameService.BROADCAST_WON_LOST_UPDATED));
+
+        _gameOverReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                startActivity(new Intent(SeekerActivity.this, ScoresActivity.class));
+                finish();
+            }
+        };
+        registerReceiver(_gameOverReceiver, new IntentFilter(GameService.BROADCAST_GAME_OVER));
 
         _serviceConnection = new ServiceConnection() {
             @Override
