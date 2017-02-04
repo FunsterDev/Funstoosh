@@ -30,7 +30,7 @@ module Funstoosh
 
     config.active_record.belongs_to_required_by_default = false
 
-    config.action_cable.mount_path = '/websocket'
+    config.action_cable.mount_path = '/cable'
     config.action_cable.disable_request_forgery_protection = true
   end
 end

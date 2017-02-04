@@ -102,7 +102,7 @@ public class GameService extends Service {
         Consumer.Options options = new Consumer.Options();
         options.cookieHandler = Ion.getDefault(this).getCookieMiddleware().getCookieManager();
         try {
-            _consumer = ActionCable.createConsumer(new URI("ws://" + Constants.HOST + "/websocket"), options);
+            _consumer = ActionCable.createConsumer(new URI(Constants.WEBSOCKET_URL), options);
         } catch (URISyntaxException e) {
             stopSelf();
             return;
