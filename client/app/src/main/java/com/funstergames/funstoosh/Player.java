@@ -34,7 +34,7 @@ public class Player extends Contact {
 
     public void win(int players) {
         state = State.WON;
-        score += 20 * players;
+        score += 20 * (players - 1);
     }
 
     public void lose(int players) {
@@ -45,7 +45,7 @@ public class Player extends Contact {
     }
 
     public void playerLost(int players) {
-        score += 10 * players;
+        score += 10 * (players - 1);
     }
 
     public void gameOver(int won, int lost) {
