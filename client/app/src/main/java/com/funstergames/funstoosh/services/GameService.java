@@ -5,20 +5,22 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.funstergames.funstoosh.Constants;
+import com.funstergames.funstoosh.Contact;
 import com.funstergames.funstoosh.Player;
 import com.funstergames.funstoosh.activities.CountdownActivity;
 import com.funstergames.funstoosh.activities.LoginActivity;
 import com.funstergames.funstoosh.activities.PlayerActivity;
 import com.funstergames.funstoosh.activities.ReadyActivity;
 import com.funstergames.funstoosh.activities.RequestPermissionActivity;
+import com.funstergames.funstoosh.activities.ScoresActivity;
 import com.funstergames.funstoosh.activities.SeekerActivity;
 import com.funstergames.funstoosh.activities.WaitForPlayersActivity;
 import com.funstergames.funstoosh.managers.NotificationsManager;
@@ -54,14 +56,15 @@ public class GameService extends Service {
     public static final String BROADCAST_USED_MAGIC_WAND_UPDATED = "used_magic_wand_updated";
     public static final String BROADCAST_MESSAGES_UPDATED = "messages_updated";
     public static final String BROADCAST_SCORE_UPDATED = "score_updated";
+    public static final String BROADCAST_WON_LOST_UPDATED = "won_lost_updated";
+    public static final String BROADCAST_GAME_OVER = "game_over";
 
     private Consumer _consumer;
     public Subscription subscription;
 
     private String _gameId = null;
 
-    // Phone number -> Player
-    public HashMap<String, Player> players = new HashMap<>();
+    public ArrayList<Player> players = new ArrayList<>();
     // Player, Picture ID
     public ArrayList<Map.Entry<Player, String>> pictures = new ArrayList<>();
     // Picture ID
@@ -76,15 +79,20 @@ public class GameService extends Service {
         WAITING,
         READY,
         PLAYING,
+        SCORES,
     }
 
     public State state = State.WAITING;
 
     // Gameplay
     public Player seeker;
+    public Player nextSeeker;
     public long countdownStartedAt = -1;
 
-    public static final long COUNTDOWN_TIME = 30000;
+    public int won = 0;
+    public int lost = 0;
+
+    public static final long COUNTDOWN_TIME = 5000;
     public static final long MAGIC_WAND_TIME = 30000;
 
     @Override
@@ -94,7 +102,7 @@ public class GameService extends Service {
         Consumer.Options options = new Consumer.Options();
         options.cookieHandler = Ion.getDefault(this).getCookieMiddleware().getCookieManager();
         try {
-            _consumer = ActionCable.createConsumer(new URI("ws://" + Constants.HOST + "/websocket"), options);
+            _consumer = ActionCable.createConsumer(new URI(Constants.WEBSOCKET_URL), options);
         } catch (URISyntaxException e) {
             stopSelf();
             return;
@@ -119,10 +127,7 @@ public class GameService extends Service {
                     // leaving previous game
                     if (subscription != null) _consumer.getSubscriptions().remove(subscription);
 
-                    players = new HashMap<>();
-                    pictures = new ArrayList<>();
-                    usedPictures = new HashSet<>();
-                    usedMagicWand = new HashMap<>();
+                    players = new ArrayList<>();
                     messages = new ArrayList<>();
 
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
@@ -190,31 +195,34 @@ public class GameService extends Service {
                             Player player = null;
                             Integer originalScore = null;
                             if (self != null) originalScore = self.score;
-                            if (message.has("who")) player = players.get(message.get("who").getAsString());
+                            if (message.has("who")) {
+                                player = players.get(players.indexOf(new Contact(message.get("who").getAsString())));
+                            }
 
                             switch (message.get("type").getAsString()) {
                                 case "players":
-                                    HashSet<String> currentPlayers = new HashSet<String>();
+                                    HashSet<Contact> currentPlayers = new HashSet<>();
                                     // Adding missing players
                                     for (JsonElement phoneNumberJson : message.get("phone_numbers").getAsJsonArray()) {
                                         String phoneNumber = phoneNumberJson.getAsString();
-                                        currentPlayers.add(phoneNumber);
-                                        if (!players.containsKey(phoneNumber)) {
+                                        Contact lookup = new Contact(phoneNumber);
+                                        currentPlayers.add(lookup);
+                                        if (!players.contains(lookup)) {
                                             player = new Player(GameService.this, phoneNumber);
 
-                                            if (seeker == null) seeker = player;
+                                            if (seeker == null) seeker = nextSeeker = player;
                                             if (phoneNumber.equals(PreferenceManager.getDefaultSharedPreferences(GameService.this).getString(LoginActivity.PREFERENCE_LOGGED_IN_PHONE_NUMBER, null))) {
                                                 self = player;
                                                 player.name = "You";
                                             }
 
-                                            players.put(phoneNumber, player);
+                                            players.add(player);
                                         }
                                     }
                                     // Removing old players
-                                    for (String phoneNumber : players.keySet()) {
-                                        if (!currentPlayers.contains(phoneNumber)) {
-                                            players.remove(phoneNumber);
+                                    for (Player previous : players) {
+                                        if (!currentPlayers.contains(previous)) {
+                                            players.remove(previous);
                                         }
                                     }
 
@@ -227,7 +235,12 @@ public class GameService extends Service {
                                     break;
 
                                 case "start":
+                                    won = lost = 0;
+                                    pictures = new ArrayList<>();
+                                    usedPictures = new HashSet<>();
+                                    usedMagicWand = new HashMap<>();
                                     state = State.PLAYING;
+                                    for (Player p : players) p.restartGame();
                                     countdownStartedAt = System.currentTimeMillis();
                                     sendBroadcast(new Intent(BROADCAST_START));
                                     break;
@@ -248,11 +261,18 @@ public class GameService extends Service {
                                     break;
 
                                 case "win":
-                                    player.win();
+                                    player.win(players.size());
+                                    seeker.playerWon(players.size());
+                                    won++;
+                                    sendBroadcast(new Intent(BROADCAST_WON_LOST_UPDATED));
                                     break;
 
                                 case "lose":
-                                    player.lose();
+                                    player.lose(players.size());
+                                    seeker.playerLost(players.size());
+                                    if (lost == 0) nextSeeker = player;
+                                    lost++;
+                                    sendBroadcast(new Intent(BROADCAST_WON_LOST_UPDATED));
                                     break;
 
                                 case "message":
@@ -268,8 +288,21 @@ public class GameService extends Service {
                                     break;
                             }
 
-                            if (originalScore != null && originalScore != self.score)
+                            switch (message.get("type").getAsString()) {
+                                case "win":
+                                case "lose":
+                                    if (won + lost >= players.size() - 1) {
+                                        seeker.gameOver(won, lost);
+                                        seeker = nextSeeker;
+                                        state = State.SCORES;
+                                        sendBroadcast(new Intent(BROADCAST_GAME_OVER));
+                                    }
+                                    break;
+                            }
+
+                            if (originalScore != null && originalScore != self.score) {
                                 sendBroadcast(new Intent(BROADCAST_SCORE_UPDATED));
+                            }
                         }
                 });
     }
@@ -294,6 +327,8 @@ public class GameService extends Service {
                         return PlayerActivity.class;
                     }
                 }
+            case SCORES:
+                return ScoresActivity.class;
             default:
                 return null;
         }

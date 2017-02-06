@@ -8,29 +8,16 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.TextView;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
-
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.os.Build;
-import android.os.CountDownTimer;
 
 import com.funstergames.funstoosh.R;
 import com.funstergames.funstoosh.services.GameService;
 import com.funstergames.funstoosh.views.TimerView;
 
 public class CountdownActivity extends AppCompatActivity {
-
-    private static final int TIMER_LENGTH = 5;
 
     private TimerView _timerView;
 
@@ -51,9 +38,9 @@ public class CountdownActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (_serviceConnection != null) unbindService(_serviceConnection);
         unregisterReceiver(_startReceiver);
+        super.onDestroy();
     }
 
     private void initializeService() {
@@ -84,13 +71,13 @@ public class CountdownActivity extends AppCompatActivity {
     }
 
     private void initializeTimer() {
-        _timerView.start(System.currentTimeMillis() - _gameService.countdownStartedAt);
+        _timerView.start(GameService.COUNTDOWN_TIME - (System.currentTimeMillis() - _gameService.countdownStartedAt));
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 startActivity(new Intent(CountdownActivity.this, _gameService.getActivityByState()));
                 finish();
             }
-        }, System.currentTimeMillis() - _gameService.countdownStartedAt);
+        }, GameService.COUNTDOWN_TIME - (System.currentTimeMillis() - _gameService.countdownStartedAt));
     }
 }

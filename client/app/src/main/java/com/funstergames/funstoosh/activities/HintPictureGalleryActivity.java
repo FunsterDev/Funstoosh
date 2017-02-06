@@ -1,7 +1,10 @@
 package com.funstergames.funstoosh.activities;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -25,6 +28,7 @@ public class HintPictureGalleryActivity extends AppCompatActivity {
     private PicturesAdapter _picturesAdapter;
 
     private ServiceConnection _serviceConnection;
+    private BroadcastReceiver _scoreUpdatedReceiver;
 
     private GameService _gameService;
 
@@ -48,7 +52,7 @@ public class HintPictureGalleryActivity extends AppCompatActivity {
                 }
                 startActivity(
                         new Intent(HintPictureGalleryActivity.this, PictureActivity.class)
-                                .putExtra(PictureActivity.EXTRA_BITMAP, _picturesAdapter.cache.get(picture.getValue()))
+                                .putExtra(PictureActivity.EXTRA_PICTURE_ID, picture.getValue())
                 );
             }
         });
@@ -58,16 +62,26 @@ public class HintPictureGalleryActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         _picturesAdapter.onDestroy(this);
         if (_serviceConnection != null) unbindService(_serviceConnection);
+        unregisterReceiver(_scoreUpdatedReceiver);
+        super.onDestroy();
     }
 
     private void initializeService() {
+        _scoreUpdatedReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                scoreUpdated();
+            }
+        };
+        registerReceiver(_scoreUpdatedReceiver, new IntentFilter(GameService.BROADCAST_SCORE_UPDATED));
+
         _serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 _gameService = ((GameService.GameBinder)service).service;
+                scoreUpdated();
             }
 
             @Override
@@ -77,5 +91,9 @@ public class HintPictureGalleryActivity extends AppCompatActivity {
             }
         };
         bindService(new Intent(this, GameService.class), _serviceConnection, 0);
+    }
+
+    private void scoreUpdated() {
+        _picturesGrid.setEnabled(_gameService.self.score >= Player.SCORE_REQUIRED_FOR_PICTURE);
     }
 }

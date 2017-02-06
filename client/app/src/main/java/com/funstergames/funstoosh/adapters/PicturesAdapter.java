@@ -15,21 +15,21 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.funstergames.funstoosh.Constants;
+import com.funstergames.funstoosh.PicassoHelper;
 import com.funstergames.funstoosh.Player;
 import com.funstergames.funstoosh.services.GameService;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.internal.DiskLruCache;
+import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
 public class PicturesAdapter extends BaseAdapter {
-    // Picture ID -> Bitmap
-    public HashMap<String, Bitmap> cache = new HashMap<>();
-    // Picture ID -> ImageView
-    private HashMap<String, ImageView> _pendingLoad = new HashMap<>();
-
     private GameService _gameService;
 
     private ServiceConnection _serviceConnection;
@@ -44,7 +44,6 @@ public class PicturesAdapter extends BaseAdapter {
         _picturesUpdatedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (_gameService == null) return;
                 notifyDataSetChanged();
             }
         };
@@ -85,6 +84,10 @@ public class PicturesAdapter extends BaseAdapter {
             context.unregisterReceiver(_picturesUpdatedReceiver);
             _picturesUpdatedReceiver = null;
         }
+        if (_usedWandReceiver != null) {
+            context.unregisterReceiver(_usedWandReceiver);
+            _usedWandReceiver = null;
+        }
     }
 
     @Override
@@ -108,8 +111,7 @@ public class PicturesAdapter extends BaseAdapter {
     public boolean isEnabled(int position) {
         Map.Entry<Player, String> picture = getItem(position);
         if (picture == null) return false;
-        if (cache.get(picture.getValue()) == null) return false;
-        return _gameService.usedMagicWand.containsKey(picture.getKey());
+        return !_gameService.usedMagicWand.containsKey(picture.getKey());
     }
 
     @Override
@@ -126,46 +128,15 @@ public class PicturesAdapter extends BaseAdapter {
 
         Map.Entry<Player, String> picture = getItem(position);
         if (picture == null) {
-            imageView.setTag(null);
             imageView.setImageBitmap(null);
             return imageView;
         }
         String pictureId = picture.getValue();
-        imageView.setTag(pictureId);
 
-        if (!cache.containsKey(pictureId)) {
-            _pendingLoad.put(pictureId, imageView);
-            loadImage(parent.getContext(), pictureId);
-        } else {
-            Bitmap image = cache.get(pictureId);
-            if (image == null) {
-                _pendingLoad.put(pictureId, imageView);
-            } else {
-                imageView.setImageBitmap(image);
-            }
-        }
+        PicassoHelper.getPicasso(parent.getContext())
+                .load(Constants.ROOT_URL + "/pictures/" + pictureId)
+                .into(imageView);
 
         return imageView;
-    }
-
-    private void loadImage(Context context, final String pictureId) {
-        cache.put(pictureId, null);
-        Ion.with(context)
-                .load(Constants.ROOT_URL + "/pictures/" + pictureId)
-                .asBitmap()
-                .setCallback(new FutureCallback<Bitmap>() {
-                    @Override
-                    public void onCompleted(Exception e, Bitmap result) {
-                        if (e != null || result == null) return;
-
-                        cache.put(pictureId, result);
-                        if (_pendingLoad.containsKey(pictureId)) {
-                            ImageView imageView = _pendingLoad.get(pictureId);
-                            if (pictureId.equals(imageView.getTag())) {
-                                imageView.setImageBitmap(result);
-                            }
-                        }
-                    }
-                });
     }
 }

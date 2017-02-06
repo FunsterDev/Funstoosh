@@ -58,8 +58,14 @@ class User < ApplicationRecord
       end
     ]
     User.where(phone_number: map.keys).map do |user|
-      map[user.phone_number]
+      map[user[:phone_number]]
     end
+  end
+
+  def phone_number
+    value = super
+    return value if value.blank? or value =~ /\D/
+    "+#{value}"
   end
 
   private
@@ -73,7 +79,7 @@ class User < ApplicationRecord
     begin
       yield
     rescue ActiveRecord::RecordNotUnique
-      other = User.where(country_code: country_code, phone_number: phone_number).first
+      other = User.where(country_code: country_code, phone_number: self[:phone_number]).first
       raise if other.nil? # some other error? will cause validation failure
 
       coder = {}
