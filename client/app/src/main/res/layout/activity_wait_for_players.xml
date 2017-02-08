@@ -9,7 +9,16 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.funstergames.funstoosh.activities.WaitForPlayersActivity">
+    tools:context="com.funstergames.funstoosh.activities.WaitForPlayersActivity"
+    android:background="@drawable/main_gradient">
+
+    <TextView
+        android:text="@string/waiting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:textSize="18sp"
+        android:layout_margin="10dp" />
 
     <ListView
         android:id="@+id/players"
@@ -19,10 +28,20 @@
 
     <Button
         android:text="@string/start_game"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/ready"
         android:onClick="ready"
         android:layout_weight="0"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:background="@drawable/round_hint"
+        android:gravity="center_vertical|center_horizontal|center"
+        android:layout_alignParentTop="false"
+        android:layout_centerHorizontal="false"
+        android:textColor="@android:color/background_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:layout_marginEnd="13dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:padding="7dp" />
 </LinearLayout>

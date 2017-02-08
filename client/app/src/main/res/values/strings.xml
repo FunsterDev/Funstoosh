@@ -10,6 +10,14 @@
     <string name="prompt_phone_number">Phone Number</string>
     <string name="action_sign_in_short">Sign in</string>
 
-    <string name="start_game">Start Game</string>
-    <string name="login">Login</string>
+    <string name="start_game">GO</string>
+    <string name="start_group">Create group</string>
+    <string name="login">login</string>
+    <string name="loginwelcom">Welcome to Funster!</string>
+    <string name="loginerror">succeeded/failed</string>
+
+    <string name="seekertext">Get a Hint!</string>
+
+    <string name="waiting">1 2 3!</string>
+    <string name="group">Add friends!</string>
 </resources>

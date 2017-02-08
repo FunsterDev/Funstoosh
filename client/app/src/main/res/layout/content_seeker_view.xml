@@ -28,6 +28,15 @@
         android:paddingEnd="3dp"
         android:onClick="getPictureHint" />
 
+    <TextView
+        android:text="@string/seekertext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_marginTop="50dp"
+        android:textSize="24sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,38 +50,50 @@
             android:id="@+id/won"
             android:layout_gravity="center"
             android:background="@drawable/round_green"
-            android:textColor="@color/abc_primary_text_material_dark"
+            android:textColor="@android:color/black"
+            android:textAlignment="center"
             android:scaleType="fitCenter"
             android:paddingStart="3dp"
-            android:paddingEnd="3dp" />
+            android:paddingEnd="3dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:foregroundGravity="center_vertical|center_horizontal|center" />
         <TextView
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:id="@+id/playing"
             android:layout_gravity="center"
             android:background="@drawable/round_white"
+            android:textColor="@android:color/black"
             android:scaleType="fitCenter"
             android:paddingStart="3dp"
             android:paddingEnd="3dp"
-            android:textColor="@android:color/white" />
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:foregroundGravity="center_vertical|center_horizontal|center" />
         <TextView
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/lost"
             android:layout_gravity="center"
             android:background="@drawable/round_red"
-            android:textColor="@color/abc_primary_text_material_dark"
+            android:textColor="@android:color/black"
             android:scaleType="fitCenter"
             android:paddingStart="3dp"
-            android:paddingEnd="3dp" />
+            android:paddingEnd="3dp"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:foregroundGravity="center_vertical|center_horizontal|center" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/PointsView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="top"
+        android:layout_gravity="top|left|fill_horizontal"
         android:clickable="false"
         android:padding="5dp"
         android:layout_marginBottom="5dp">
@@ -81,10 +102,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
+            android:gravity="left"
             android:clickable="true"
             android:onClick="addPicture"
-            android:background="@color/colorPoints">
+            android:background="@color/colorPoints"
+            android:layout_gravity="left">
 
             <TextView
                 android:id="@+id/score"
@@ -103,6 +125,8 @@
             android:layout_margin="0dp"
             android:minHeight="22dp"
             android:minWidth="40dp"
-            android:scaleType="center" />
+            android:scaleType="center"
+            android:layout_gravity="right" />
     </LinearLayout>
+
 </FrameLayout>

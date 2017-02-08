@@ -115,6 +115,7 @@ public class WaitForPlayersAdapter extends BaseAdapter {
         }
 
         Contact contact = getItem(position);
+        checkbox.setTextSize(20);
         checkbox.setText(contact.toString());
         checkbox.setChecked(position < _gameService.players.size());
 

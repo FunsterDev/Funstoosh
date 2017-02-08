@@ -10,14 +10,34 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.funstergames.funstoosh.activities.CreateGroupActivity"
     android:background="@drawable/main_gradient">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:text="@string/group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:textSize="18sp"
+        android:layout_margin="10dp" />
 
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/contacts_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:textSize="20dp" />
+
+</LinearLayout>
 
     <Button
-        android:text="+"
+        android:text="@string/start_group"
+        android:background="@drawable/round_hint"
+        android:gravity="center_vertical|center_horizontal|center"
+        android:layout_alignParentTop="false"
+        android:layout_centerHorizontal="false"
+        android:layout_marginTop="134dp"
+        android:textColor="@android:color/background_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="18dp"
@@ -25,5 +45,6 @@
         android:layout_marginEnd="13dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:onClick="createGroup" />
+        android:onClick="createGroup"
+        android:padding="7dp" />
 </RelativeLayout>

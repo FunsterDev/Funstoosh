@@ -18,6 +18,7 @@
     <com.funstergames.funstoosh.views.TimerView
         android:id="@+id/timer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true" />
 
 </RelativeLayout>
