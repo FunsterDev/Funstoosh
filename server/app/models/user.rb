@@ -23,7 +23,29 @@ class User < ApplicationRecord
   validates_presence_of :fcm_registration_id
 
   before_validation :normalize!, on: :create
-  around_create :override_existing
+
+  # Try saving, and if fails for unique validation update if necessary and use existing record.
+  def save!(*)
+    fcm_registration_id = self.fcm_registration_id
+    begin
+      super
+    rescue ActiveRecord::RecordNotUnique
+      other = User.where(country_code: country_code, phone_number: self[:phone_number]).first
+      raise if other.nil? # some other error? will cause validation failure
+
+      coder = {}
+      other.encode_with(coder)
+      init_with(coder)
+
+      if fcm_registration_id != self.fcm_registration_id
+        # updated
+        self.fcm_registration_id = fcm_registration_id
+        super
+      else
+        true
+      end
+    end
+  end
 
   def self.normalize_phone(country_code, phone_number)
     if country_code.present?
@@ -72,25 +94,5 @@ class User < ApplicationRecord
 
   def normalize!
     self.country_code, self.phone_number = User.normalize_phone(country_code, phone_number)
-  end
-
-  def override_existing
-    fcm_registration_id = self.fcm_registration_id
-    begin
-      yield
-    rescue ActiveRecord::RecordNotUnique
-      other = User.where(country_code: country_code, phone_number: self[:phone_number]).first
-      raise if other.nil? # some other error? will cause validation failure
-
-      coder = {}
-      other.encode_with(coder)
-      init_with(coder)
-
-      if fcm_registration_id != self.fcm_registration_id
-        # updated
-        self.fcm_registration_id = fcm_registration_id
-        save!
-      end
-    end
   end
 end
