@@ -59,13 +59,14 @@
                 android:layout_width="match_parent" />
 
             <TextView
-                android:text="@string/loginerror"
+                android:text="@string/login_error"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textViewError"
+                android:id="@+id/error"
                 android:textColor="@color/colorinputBG"
                 android:textSize="16sp"
-                android:gravity="center" />
+                android:gravity="center"
+                android:visibility="invisible" />
         </LinearLayout>
     </ScrollView>
 

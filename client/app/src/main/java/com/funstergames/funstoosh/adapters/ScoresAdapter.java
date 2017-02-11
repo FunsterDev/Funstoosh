@@ -15,10 +15,16 @@ import android.widget.TextView;
 import com.funstergames.funstoosh.Player;
 import com.funstergames.funstoosh.services.GameService;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 public class ScoresAdapter extends BaseAdapter {
 
     private GameService _gameService;
     private ServiceConnection _serviceConnection;
+
+    private ArrayList<Player> _sortedPlayers;
 
     public ScoresAdapter(Context context) {
         initializeService(context);
@@ -29,6 +35,14 @@ public class ScoresAdapter extends BaseAdapter {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 _gameService = ((GameService.GameBinder)service).service;
+                _sortedPlayers = new ArrayList<>(_gameService.players);
+                Collections.sort(_sortedPlayers, new Comparator<Player>() {
+                    @Override
+                    public int compare(Player o1, Player o2) {
+                        return (o1.score < o2.score) ? -1 : ((o1.score == o2.score) ? 0 : 1);
+                    }
+                });
+                notifyDataSetChanged();
             }
 
             @Override
@@ -36,7 +50,6 @@ public class ScoresAdapter extends BaseAdapter {
                 _serviceConnection = null;
                 onDestroy(context);
                 _gameService = null;
-                notifyDataSetChanged();
             }
         };
         context.bindService(new Intent(context, GameService.class), _serviceConnection, 0);
@@ -51,14 +64,14 @@ public class ScoresAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if (_gameService == null) return 0;
-        return _gameService.players.size();
+        if (_sortedPlayers == null) return 0;
+        return _sortedPlayers.size();
     }
 
     @Override
     public Player getItem(int position) {
-        if (_gameService == null) return null;
-        return _gameService.players.get(position);
+        if (_sortedPlayers == null) return null;
+        return _sortedPlayers.get(position);
     }
 
     @Override
