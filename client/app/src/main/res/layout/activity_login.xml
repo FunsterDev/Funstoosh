@@ -37,6 +37,17 @@
                 android:hint="@string/prompt_country_code"
                 android:inputType="phone"
                 android:maxLines="1" />
+        <LinearLayout
+            android:id="@+id/phonetart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(0)"
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/phone_number"
@@ -47,6 +58,7 @@
                 android:maxLines="1" >
                 <requestFocus/>
             </EditText>
+        </LinearLayout>
 
             <Button
                 android:id="@+id/login"

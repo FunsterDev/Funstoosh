@@ -48,58 +48,64 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/won"
-            android:layout_gravity="center"
+            android:layout_gravity="center_vertical|center"
             android:background="@drawable/round_green"
             android:textColor="@android:color/black"
-            android:textAlignment="center"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
             android:paddingStart="3dp"
             android:paddingEnd="3dp"
+            android:textAlignment="center"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:foregroundGravity="center_vertical|center_horizontal|center" />
+            android:text="1"
+            android:paddingTop="5dp"
+            tools:textAlignment="center" />
         <TextView
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:id="@+id/playing"
-            android:layout_gravity="center"
+            android:layout_gravity="center_vertical|center"
             android:background="@drawable/round_white"
             android:textColor="@android:color/black"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
             android:paddingStart="3dp"
             android:paddingEnd="3dp"
             android:textAlignment="center"
-            android:textSize="18sp"
+            android:textSize="26sp"
             android:textStyle="bold"
-            android:foregroundGravity="center_vertical|center_horizontal|center" />
+            android:text="1"
+            android:paddingTop="5dp"
+            tools:textAlignment="center" />
         <TextView
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/lost"
-            android:layout_gravity="center"
+            android:layout_gravity="center_vertical|center"
             android:background="@drawable/round_red"
             android:textColor="@android:color/black"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
             android:paddingStart="3dp"
             android:paddingEnd="3dp"
             android:textAlignment="center"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:foregroundGravity="center_vertical|center_horizontal|center" />
+            android:text="1"
+            android:paddingTop="5dp"
+            tools:textAlignment="center" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/PointsView"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="top|left|fill_horizontal"
+        android:layout_gravity="top|fill_horizontal"
         android:clickable="false"
         android:padding="5dp"
-        android:layout_marginBottom="5dp">
+        android:layout_marginBottom="5dp"
+        android:layout_width="match_parent">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="left"
@@ -118,15 +124,6 @@
                 android:layout_marginRight="15dp" />
 
         </LinearLayout>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/left_triangle_blue"
-            android:layout_margin="0dp"
-            android:minHeight="22dp"
-            android:minWidth="40dp"
-            android:scaleType="center"
-            android:layout_gravity="right" />
     </LinearLayout>
 
 </FrameLayout>

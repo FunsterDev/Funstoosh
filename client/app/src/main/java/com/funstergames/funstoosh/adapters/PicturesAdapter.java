@@ -1,5 +1,6 @@
 package com.funstergames.funstoosh.adapters;
 
+
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,14 +11,23 @@ import android.graphics.Bitmap;
 import android.os.IBinder;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+
+import com.funstergames.funstoosh.R;
+import com.funstergames.funstoosh.activities.PictureActivity;
+import com.funstergames.funstoosh.adapters.PicturesAdapter;
+import com.funstergames.funstoosh.services.GameService;
 
 import com.funstergames.funstoosh.Constants;
 import com.funstergames.funstoosh.PicassoHelper;
 import com.funstergames.funstoosh.Player;
-import com.funstergames.funstoosh.services.GameService;
+import com.funstergames.funstoosh.activities.HintPictureGalleryActivity;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.squareup.okhttp.OkHttpClient;
@@ -30,6 +40,8 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class PicturesAdapter extends BaseAdapter {
+   private Context _context;
+
     private GameService _gameService;
 
     private ServiceConnection _serviceConnection;
@@ -38,6 +50,7 @@ public class PicturesAdapter extends BaseAdapter {
 
     public PicturesAdapter(Context context) {
         initializeService(context);
+        _context = context;
     }
 
     private void initializeService(final Context context) {
@@ -115,13 +128,30 @@ public class PicturesAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final ImageView imageView;
         if (convertView == null) {
             imageView = new ImageView(parent.getContext());
-            imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(8, 8, 8, 8);
+            imageView.setLayoutParams(new GridView.LayoutParams(450, 450));
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            imageView.setClickable(true);
+            imageView.setAdjustViewBounds(true);
+
+          View v = imageView;
+          v.setOnClickListener(new  View.OnClickListener() {
+              @Override
+              public void onClick(View view) {
+
+                  Map.Entry<Player, String> picture = _gameService.pictures.get(position);
+                  if (!_gameService.usedPictures.contains(picture.getValue())) {
+                                _gameService.usedPictures.add(picture.getValue());
+                                _gameService.subscription.perform("used_picture");
+                            }
+                            _context.startActivity(
+                                    new Intent(_context.getApplicationContext(), PictureActivity.class).putExtra(PictureActivity.EXTRA_PICTURE_ID, picture.getValue())
+                             );
+              }
+          });
         } else {
             imageView = (ImageView)convertView;
         }

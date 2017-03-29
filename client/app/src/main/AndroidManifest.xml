@@ -59,7 +59,7 @@
             android:name=".services.InviteService"
             android:exported="false" />
 
-        <activity android:name=".activities.ScoresActivity"></activity>
+        <activity android:name=".activities.ScoresActivity" />
     </application>
 
 </manifest>

@@ -31,28 +31,31 @@
         android:gravity="right">
 
         <LinearLayout
-            android:id="@+id/choosePhotosView"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="right|center"
+            android:layout_gravity="top|left"
+            android:gravity="fill">
+
+        <LinearLayout
+            android:id="@+id/choosePhotosView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="right|fill_horizontal"
             android:clickable="true"
             android:padding="5dp"
             android:layout_marginBottom="5dp">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/right_triangle_purple"
-                android:layout_marginRight="-17dp"
-                android:layout_gravity="left" />
+
+
 
             <LinearLayout
                 android:id="@+id/take_picture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center"
+                android:gravity="right|fill_horizontal|center"
                 android:clickable="true"
                 android:onClick="addPicture"
                 android:background="@color/color_action_button_BG"
@@ -64,8 +67,8 @@
                     android:textColor="@android:color/white"
                     android:text="+20"
                     android:layout_margin="10dp"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="15dp" />
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="10dp" />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -74,7 +77,27 @@
                     android:minHeight="40dp"
                     android:minWidth="40dp" />
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="fill_horizontal"
+                android:clickable="true"
+                android:onClick="addPicture"
+                android:background="@color/colorPoints"
+                android:layout_weight="1">
 
+                <TextView
+                    android:id="@+id/score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:layout_margin="10dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="15dp" />
+
+            </LinearLayout>
+        </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -82,17 +105,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="right|center"
+            android:gravity="right"
             android:clickable="true"
             android:padding="5dp"
             android:layout_marginBottom="5dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/right_triangle_purple"
-                android:layout_marginRight="-17dp"
-                android:layout_gravity="left" />
 
             <LinearLayout
                 android:id="@+id/magic_wand"
@@ -110,9 +126,9 @@
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/white"
                     android:text="-10"
-                    android:layout_margin="0dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="0dp" />
+                    android:layout_margin="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="15dp" />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -129,17 +145,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="right|center"
+            android:gravity="right"
             android:clickable="true"
             android:padding="5dp"
             android:layout_marginBottom="5dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/right_triangle_purple"
-                android:layout_marginRight="-17dp"
-                android:layout_gravity="left" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -166,7 +175,7 @@
     </LinearLayout>
 
 
-    <LinearLayout
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center|center_vertical|center_horizontal"
@@ -219,83 +228,50 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/won"
-        android:layout_gravity="center"
+        android:layout_gravity="center_vertical|center"
         android:background="@drawable/round_green"
         android:textColor="@android:color/black"
-        android:scaleType="fitCenter"
+        android:scaleType="center"
         android:paddingStart="3dp"
         android:paddingEnd="3dp"
         android:textAlignment="center"
-        android:foregroundGravity="center_vertical|center_horizontal|center"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:text="1"
+        android:paddingTop="5dp"
+        tools:textAlignment="center" />
     <TextView
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:id="@+id/playing"
-        android:layout_gravity="center"
+        android:layout_gravity="center_vertical|center"
         android:background="@drawable/round_white"
         android:textColor="@android:color/black"
-        android:scaleType="fitCenter"
+        android:scaleType="center"
         android:paddingStart="3dp"
         android:paddingEnd="3dp"
         android:textAlignment="center"
-        android:foregroundGravity="center_vertical|center_horizontal|center"
-        android:textSize="18sp"
-        android:textStyle="bold"  />
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:text="1"
+        android:paddingTop="5dp"
+        tools:textAlignment="center" />
     <TextView
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/lost"
-        android:layout_gravity="center"
+        android:layout_gravity="center_vertical|center"
         android:background="@drawable/round_red"
         android:textColor="@android:color/black"
-        android:scaleType="fitCenter"
+        android:scaleType="center"
         android:paddingStart="3dp"
         android:paddingEnd="3dp"
         android:textAlignment="center"
-        android:foregroundGravity="center_vertical|center_horizontal|center"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:text="1"
+        android:paddingTop="5dp"
+        tools:textAlignment="center" />
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/PointsView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="top"
-        android:clickable="false"
-        android:padding="5dp"
-        android:layout_marginBottom="5dp"
-        android:gravity="left">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="left|center"
-            android:clickable="true"
-            android:onClick="addPicture"
-            android:background="@color/colorPoints">
-
-            <TextView
-                android:id="@+id/score"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:layout_margin="10dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="15dp" />
-
-        </LinearLayout>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/left_triangle_blue"
-            android:layout_margin="0dp"
-            android:minHeight="22dp"
-            android:minWidth="40dp"
-            android:scaleType="center"
-            android:layout_gravity="right" />
-    </LinearLayout>
 </FrameLayout>

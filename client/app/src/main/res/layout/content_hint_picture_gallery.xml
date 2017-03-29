@@ -5,24 +5,42 @@
     android:id="@+id/content_hint_picture_gallery"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="0dp"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    android:padding="5dp"
+    android:overScrollMode="always"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.funstergames.funstoosh.activities.HintPictureGalleryActivity"
     tools:showIn="@layout/activity_hint_picture_gallery"
     android:background="@drawable/main_gradient">
 
-    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pictures_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnWidth="110dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:columnWidth="300dp"
         android:numColumns="auto_fit"
-        android:verticalSpacing="5dp"
-        android:horizontalSpacing="5dp"
-        android:stretchMode="columnWidth"
-        android:gravity="center" />
+        android:verticalSpacing="0dp"
+        android:horizontalSpacing="0dp"
+        android:stretchMode="none"
+    android:overScrollMode="always"
+    android:keepScreenOn="true"
+        android:gravity="center"
+        android:fastScrollAlwaysVisible="true"/>
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="Button"
+        android:onClick="newAction"/>
 
 </RelativeLayout>

@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.ExpandedMenuView;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 
 import com.funstergames.funstoosh.Player;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 public class HintPictureGalleryActivity extends AppCompatActivity {
 
+    private Button _testbtn;
     private GridView _picturesGrid;
     private PicturesAdapter _picturesAdapter;
 
@@ -37,25 +39,30 @@ public class HintPictureGalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hint_picture_gallery);
 
+        _testbtn = (Button) findViewById(R.id.button2);
         _picturesGrid = (GridView)findViewById(R.id.pictures_grid);
 
         _picturesAdapter = new PicturesAdapter(this);
         _picturesGrid.setAdapter(_picturesAdapter);
 
-        _picturesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Map.Entry<Player, String> picture = _gameService.pictures.get(position);
-                if (!_gameService.usedPictures.contains(picture.getValue())) {
-                    _gameService.usedPictures.add(picture.getValue());
-                    _gameService.subscription.perform("used_picture");
-                }
-                startActivity(
-                        new Intent(HintPictureGalleryActivity.this, PictureActivity.class)
-                                .putExtra(PictureActivity.EXTRA_PICTURE_ID, picture.getValue())
-                );
-            }
-        });
+      //  _picturesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+
+          //  @Override
+
+
+                    //      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+      //          Map.Entry<Player, String> picture = _gameService.pictures.get(position);
+      //          if (!_gameService.usedPictures.contains(picture.getValue())) {
+      //              _gameService.usedPictures.add(picture.getValue());
+      //              _gameService.subscription.perform("used_picture");
+      //          }
+      //          startActivity(
+      //                  new Intent(HintPictureGalleryActivity.this, PictureActivity.class)
+      //                          .putExtra(PictureActivity.EXTRA_PICTURE_ID, picture.getValue())
+     //           );
+     //       }
+     //   });
 
         initializeService();
     }
@@ -95,5 +102,11 @@ public class HintPictureGalleryActivity extends AppCompatActivity {
 
     private void scoreUpdated() {
         _picturesGrid.setEnabled(_gameService.self.score >= Player.SCORE_REQUIRED_FOR_PICTURE);
+    }
+
+
+    private void newAction(View view)
+    {
+        _testbtn.setText("CLICKED");
     }
 }
