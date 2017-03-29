@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.funstergames.funstoosh.R;
 import com.funstergames.funstoosh.Constants;
@@ -36,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText _countryCodeEdit;
     private EditText _phoneNumberEdit;
+    private TextView _errorText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
 
         _countryCodeEdit = (EditText)findViewById(R.id.country_code);
         _phoneNumberEdit = (EditText)findViewById(R.id.phone_number);
+        _errorText = (TextView)findViewById(R.id.error);
 
         if (ContextCompat.checkSelfPermission(this,  Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -92,18 +95,8 @@ public class LoginActivity extends AppCompatActivity {
         if (phoneNumber != null) _phoneNumberEdit.setText(phoneNumber);
     }
 
-    private int getAppVersion() {
-        try {
-            PackageInfo packageInfo = getPackageManager()
-                    .getPackageInfo(getPackageName(), 0);
-            return packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            // should never happen
-            throw new RuntimeException("Could not get package name: " + e);
-        }
-    }
-
     public void login(View view) {
+        _errorText.setVisibility(View.INVISIBLE);
         Ion.with(this)
                 .load("POST", Constants.ROOT_URL + "/users")
                 .setBodyParameter("country_code", _countryCodeEdit.getText().toString())
@@ -114,7 +107,10 @@ public class LoginActivity extends AppCompatActivity {
                 .setCallback(new FutureCallback<Response<JsonObject>>() {
                     @Override
                     public void onCompleted(Exception e, Response<JsonObject> response) {
-                        if (e != null || response.getHeaders().code() != 201) return;
+                        if (e != null || response.getHeaders().code() != 201) {
+                            _errorText.setVisibility(View.VISIBLE);
+                            return;
+                        }
                         PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
                                 .edit()
                                 .putString(PREFERENCE_LOGGED_IN_PHONE_NUMBER, response.getResult().get("phone_number").getAsString())

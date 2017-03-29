@@ -14,7 +14,7 @@
     <string name="start_group">Create group</string>
     <string name="login">login</string>
     <string name="loginwelcom">Welcome to Funster!</string>
-    <string name="loginerror">succeeded/failed</string>
+    <string name="login_error">failed</string>
 
     <string name="seekertext">Get a Hint!</string>
 

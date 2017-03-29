@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.funstergames.funstoosh.R;
@@ -21,6 +22,7 @@ public class SeekerActivity extends AppCompatActivity {
     private BroadcastReceiver _scoreUpdatedReceiver;
     private BroadcastReceiver _wonLostReceiver;
     private BroadcastReceiver _gameOverReceiver;
+    private BroadcastReceiver _picturesUpdated;
 
     private GameService _gameService;
 
@@ -28,6 +30,7 @@ public class SeekerActivity extends AppCompatActivity {
     private TextView _wonText;
     private TextView _lostText;
     private TextView _playingText;
+    private ImageButton _getHintButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,7 @@ public class SeekerActivity extends AppCompatActivity {
         _wonText = (TextView)findViewById(R.id.won);
         _lostText = (TextView)findViewById(R.id.lost);
         _playingText = (TextView)findViewById(R.id.playing);
+        _getHintButton = (ImageButton)findViewById(R.id.get_hint);
 
         initializeService();
     }
@@ -48,6 +52,7 @@ public class SeekerActivity extends AppCompatActivity {
         unregisterReceiver(_scoreUpdatedReceiver);
         unregisterReceiver(_wonLostReceiver);
         unregisterReceiver(_gameOverReceiver);
+        unregisterReceiver(_picturesUpdated);
         super.onDestroy();
     }
 
@@ -77,6 +82,14 @@ public class SeekerActivity extends AppCompatActivity {
             }
         };
         registerReceiver(_gameOverReceiver, new IntentFilter(GameService.BROADCAST_GAME_OVER));
+
+        _picturesUpdated = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                _getHintButton.setEnabled(!_gameService.pictures.isEmpty());
+            }
+        };
+        registerReceiver(_picturesUpdated, new IntentFilter(GameService.BROADCAST_PICTURES_UPDATED));
 
         _serviceConnection = new ServiceConnection() {
             @Override
