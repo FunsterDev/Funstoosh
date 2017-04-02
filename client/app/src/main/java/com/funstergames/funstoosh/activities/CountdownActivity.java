@@ -31,7 +31,7 @@ public class CountdownActivity extends AppCompatActivity {
 
     TextView text1;
 
-    private static final String FORMAT = "%02d:%02d:%02d";
+    private static final String FORMAT = "%02d";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +39,30 @@ public class CountdownActivity extends AppCompatActivity {
         setContentView(R.layout.activity_countdown);
 
         _timerView = (TimerView) findViewById(R.id.timer);
+        text1 = (TextView)  findViewById(R.id.textView);
+
 
         initializeService();
+        new CountDownTimer(5000, 1000) { // adjust the milli seconds here
+
+            public void onTick(long millisUntilFinished) {
+
+                text1.setText(""+String.format(FORMAT,
+
+                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(
+                                TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+            }
+
+            public void onFinish() {
+                text1.setText("done!");
+                ///TODO: check if the user us seeker or player
+             //   Intent nextPage = new Intent(countdown_view.this, players_view.class);
+             //   startActivity(nextPage);
+            }
+        }.start();
+
+
+
     }
 
     @Override
@@ -89,4 +111,9 @@ public class CountdownActivity extends AppCompatActivity {
             }
         }, GameService.COUNTDOWN_TIME - (System.currentTimeMillis() - _gameService.countdownStartedAt));
     }
+
+
+
+
 }
+
