@@ -1,6 +1,7 @@
 package com.funstergames.funstoosh.activities;
 
 import android.graphics.Bitmap;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.AbsoluteLayout;
@@ -20,7 +21,8 @@ public class PictureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         ImageView imageView = new ImageView(this);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        imageView.setLayoutParams(new LinearLayout.LayoutParams(450,450));
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         PicassoHelper.getPicasso(this)
                 .load(Constants.ROOT_URL + "/pictures/" + getIntent().getStringExtra(EXTRA_PICTURE_ID))

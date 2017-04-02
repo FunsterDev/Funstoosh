@@ -7,11 +7,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import com.funstergames.funstoosh.R;
 import com.funstergames.funstoosh.services.GameService;
@@ -25,6 +28,10 @@ public class CountdownActivity extends AppCompatActivity {
     private BroadcastReceiver _startReceiver;
 
     private GameService _gameService;
+
+    TextView text1;
+
+    private static final String FORMAT = "%02d:%02d:%02d";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +81,9 @@ public class CountdownActivity extends AppCompatActivity {
         _timerView.start(GameService.COUNTDOWN_TIME - (System.currentTimeMillis() - _gameService.countdownStartedAt));
         new Timer().schedule(new TimerTask() {
             @Override
+
             public void run() {
+
                 startActivity(new Intent(CountdownActivity.this, _gameService.getActivityByState()));
                 finish();
             }

@@ -21,4 +21,13 @@
         android:layout_height="match_parent"
         android:layout_centerVertical="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="29"
+        android:id="@+id/textView"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="60dp" />
 </RelativeLayout>
